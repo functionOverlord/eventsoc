@@ -92,10 +92,8 @@ def register(request):
                 'society_form': society_form,
                 'registered': registered})
 
-
-# @login_required
-# @permission_required(eventsoc.is_society)
-# User needs to select an event
+@login_required
+@permission_required(eventsoc.is_society)
 def edit_event(request):
     # society = NewUser.objects.get(id=request.user.id)
     # event_form = EventForm()
@@ -148,7 +146,8 @@ def booked(request):
     return render(request, "eventsoc/booked.html", {})
 
 
-#@login_required
+@login_required
+@permission_required(eventsoc.is_user)
 def account(request):
     return render(request, "eventsoc/account.html", {})
 
@@ -157,7 +156,8 @@ def society(request):
     return render(request, "eventsoc/society.html", {})
 
 
-#@login_required
+@login_required
+@permission_required(eventsoc.society)
 def past_events(request):
     return render(request, "eventsoc/past_events.html", {})
 
