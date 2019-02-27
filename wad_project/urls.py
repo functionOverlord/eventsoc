@@ -16,7 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from eventsoc import views
-
+from django.conf import settings
+from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index, name='index'),
@@ -30,4 +31,4 @@ urlpatterns = [
     path('society', views.society, name='society'),
     path('past_events', views.past_events, name='past_events'),
     path('user_logout', views.user_logout, name='user_logout'),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
