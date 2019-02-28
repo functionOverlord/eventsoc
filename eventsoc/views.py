@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.contrib.auth.decorators import permission_required, login_required
+from eventsoc.forms import UserForm, SocietyForm
 
-# Permissions will be defined in models
 
 # Create your views here.
 
@@ -12,11 +12,35 @@ def index(request):
 
 
 def login(request):
-    return render(request, "eventsoc/login.html", {})
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(username=username, password=password)
+        if user:
+            if user.is_active:
+                login(request, user)
+                return HttpResponseRedirect(reverse('eventsoc/index.html'))
+            else:
+                return HttpResponse("account disabled?")
+        else:
+            print("Invalid login details:{0}, {1}".format(username, password))
+
+        soc_username = request.POST.get('username')
+        soc_password = request.POST.get('password')
+        society = authenticate(username=soc_username, password=soc_password)
+        if society:
+            if society.is_active:
+                login(request, society)
+                return HttpResponseRedirect(reverse('eventsoc/index.html'))
+            else:
+                return HttpResponse("Invalid login details")
+        else:
+            print("Invalid login details:{0}, {1}".format(username, password))
+    else:
+        return render(request, 'eventsoc/login.html')
 
 
 @login_required
-@permission_required(eventsoc.is_society)
 def create_event(request):
     return render(request, "eventsoc/create_event.html", {})
 
@@ -44,13 +68,12 @@ def register(request):
     else:
         user_form = UserForm()
         society_form = SocietyForm()
-    return render(request, 'wad_project/register.html',
+    return render(request, 'eventsoc/register.html',
                 {'user_form': user_form,
                 'society_form': society_form,
                 'registered': registered})
 
 @login_required
-@permission_required(eventsoc.is_society)
 def edit_event(request):
     return render(request, "eventsoc/edit_event.html", {})
 
@@ -61,13 +84,11 @@ def edit_profile(request):
 
 
 @login_required
-@permission_required(eventsoc.is_user)
 def booked(request):
     return render(request, "eventsoc/booked.html", {})
 
 
 @login_required
-@permission_required(eventsoc.is_user)
 def account(request):
     return render(request, "eventsoc/account.html", {})
 
@@ -77,7 +98,6 @@ def society(request):
 
 
 @login_required
-@permission_required(eventsoc.society)
 def past_events(request):
     return render(request, "eventsoc/past_events.html", {})
 
