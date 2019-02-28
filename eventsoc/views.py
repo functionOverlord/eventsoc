@@ -5,10 +5,14 @@ from eventsoc.forms import UserForm, SocietyForm
 
 
 # Create your views here.
+
+
 def index(request):
-    return HttpResponse("Hello world!")
+    return render(request, "eventsoc/index.html", {})
+
 
 def login(request):
+<<<<<<< HEAD
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -35,13 +39,19 @@ def login(request):
             print("Invalid login details:{0}, {1}".format(username, password))
     else:
         return render(request, 'eventsoc/login.html')
+=======
+    return render(request, "eventsoc/login.html", {})
+
+>>>>>>> 1f4920d94b1263c6ff2ea5d00e0f919558c85ada
 
 
 @login_required
 def create_event(request):
-    return HttpResponse("Create events page")
+    return render(request, "eventsoc/create_event.html", {})
+
 
 def register(request):
+<<<<<<< HEAD
     registered = False
     if request.method == 'POST':
         user_form = UserForm(data=request.POST)
@@ -68,31 +78,45 @@ def register(request):
                 {'user_form': user_form,
                 'society_form': society_form,
                 'registered': registered})
+=======
+    return render(request, "eventsoc/register.html", {})
+
+>>>>>>> 1f4920d94b1263c6ff2ea5d00e0f919558c85ada
 
 @login_required
 def edit_event(request):
-    return HttpResponse("edit_event")
+    return render(request, "eventsoc/edit_event.html", {})
+
 
 @login_required
 def edit_profile(request):
-    return HttpResponse("edit_profile")
+    return render(request, "eventsoc/edit_profile.html", {})
+
 
 @login_required
 def booked(request):
-    return HttpResponse("booked")
+    return render(request, "eventsoc/booked.html", {})
+
 
 @login_required
 def account(request):
-    return HttpResponse("account")
+    return render(request, "eventsoc/account.html", {})
+
 
 def society(request):
-    return HttpResponse("society")
+    return render(request, "eventsoc/society.html", {})
+
 
 @login_required
 def past_events(request):
-    return HttpResponse("past_events")
+    return render(request, "eventsoc/past_events.html", {})
+
 
 @login_required
 def user_logout(request):
+<<<<<<< HEAD
     logout(request)
     return HttpResponseRedirect(reverse('index'))
+=======
+    return render(request, "eventsoc/user_logout.html", {})
+>>>>>>> 1f4920d94b1263c6ff2ea5d00e0f919558c85ada
