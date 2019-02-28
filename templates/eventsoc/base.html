@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+
+<html>
+    <head lang="en">
+        <title>
+            Eventsoc -
+            {% block title_block %}
+                eventsoc
+            {% endblock %}
+        </title>
+    </head>
+
+    <body>
+        <div>
+            {% block body_block %}
+            {% endblock %}
+        </div>
+    </body>
+</html>
