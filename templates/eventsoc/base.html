@@ -11,6 +11,15 @@
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
+        <!-- Inline css should go after bootstrap's and before custom stylesheet, prevents an issue with mobile devices apparently -->
+        <style>
+            body {
+                padding-top: 70px;
+            }
+        </style>
+
+        <!-- Add any custom stylesheet -->
+
         <title>
             Eventsoc -
             {% block title_block %}
@@ -20,15 +29,68 @@
     </head>
 
     <body>
-        <div>
-            <h1>
-                Eventsoc
-            </h1>
+        <div class="jumbotron">
+            <h1>Eventsoc</h1>
         </div>
+
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+
+            <!-- button to unhide the navbar if it gets resized to vertical because of screen size -->
+{#            <button class="navbar-toggle" data-toggle="collapse" data-target="#collapse_target">#}
+{#                <span class="navbar-toggler-icon"></span>#}
+{#            </button>#}
+
+            <div class="collapse navbar-collapse" id="collapse_target">
+                <span class="navbar-text"><h3>EventSoc</h3></span>
+
+                <ul class="navbar-nav">
+{#                    <li class="nav-item dropdown">#}
+{#                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" data-target="dropdown_target" href="#">#}
+{#                            Dropdown#}
+{#                            <span class="caret"></span>#}
+{#                        </a>#}
+{#                        <div class="dropdown-menu" aria-labelledby="dropdown_target">#}
+{#                            <a class="dropdown-item">L1</a>#}
+{#                            <div class="dropdown-provider"></div>#}
+{#                            <a class="dropdown-item">L2</a>#}
+{#                            <a class="dropdown-item">L3</a>#}
+{#                        </div>#}
+{#                    </li>#}
+                    <li>
+                        <a class="nav-link" href="/booked">Booked Events</a>
+                    </li>
+                    <li>
+                        <a class="nav-link" href="#">Bookmarked events</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/login">Login</a>
+                    </li>
+                    <form class="form-inline" action="/login">
+                        <button class="btn btn-outline-success" type="button" onclick="location.href='/login'">Login</button>
+                        <button class="btn btn-outline-success" type="button" onclick="location.href='/register'">Register</button>
+                    </form>
+                </ul>
+            </div>
+        </nav>
+
+
         <div>
             {% block body_block %}
             {% endblock %}
         </div>
+        <div>
+            <br/>
+            some content for
+            <br/><br/><br/><br/><br/>
+            <br/><br/><br/><br/><br/>
+            <br/><br/><br/><br/><br/>
+            <br/><br/><br/><br/><br/>
+            <br/><br/><br/><br/><br/>
+            scrolling
+        </div>
+
 {#        <div>#}
 {#            {% if user.is_authenticated %}#}
 {#                display login and register#}
@@ -40,7 +102,7 @@
         <!-- Optional JavaScript -->
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-{#        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>#}
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     </body>
 </html>
