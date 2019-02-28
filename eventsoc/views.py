@@ -48,6 +48,10 @@ def user_login(request):
 
 #@login_required
 # @permission_required(eventsoc.is_society)
+
+
+@login_required
+>>>>>>> Login view and society and user forms
 def create_event(request):
     # event_form = EventForm()
     if request.method == 'POST':
@@ -93,7 +97,6 @@ def register(request):
                 'registered': registered})
 
 @login_required
-@permission_required(eventsoc.is_society)
 def edit_event(request):
     # society = NewUser.objects.get(id=request.user.id)
     # event_form = EventForm()
@@ -147,7 +150,6 @@ def booked(request):
 
 
 @login_required
-@permission_required(eventsoc.is_user)
 def account(request):
     return render(request, "eventsoc/account.html", {})
 
@@ -157,7 +159,6 @@ def society(request):
 
 
 @login_required
-@permission_required(eventsoc.society)
 def past_events(request):
     return render(request, "eventsoc/past_events.html", {})
 
