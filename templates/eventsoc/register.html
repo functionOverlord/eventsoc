@@ -6,5 +6,36 @@
 {% endblock %}
 
 {% block body_block %}
-    register
+<div class="card-deck">
+  <div class="card" >
+    <h2>User Registration</h2>
+    <form id="user_form" method="post" class="form-inline" action="/eventsoc/register/">
+      {% csrf_token %}
+      {% for hidden in form.hidden_fields %}
+        {{ hidden }}
+      {% endfor %}
+      {% for field in form.visible_fields %}
+        {{ field.errors }}
+        {{ field.help_text }}
+        {{ field }}
+      {% endfor %}
+      <input type="submit" class="btn btn-default" name="user_register" value="Create User"/>
+    </form>
+  </div>
+  <div class="card">
+    <h2>Society Registration</h2>
+    <form id="society_form" method="post" class="form-inline" action="/eventsoc/register/">
+      {% csrf_token %}
+      {% for hidden in form.hidden_fields %}
+        {{ hidden }}
+      {% endfor %}
+      {% for field in form.visible_fields %}
+        {{ field.errors }}
+        {{ field.help_text }}
+        {{ field }}
+      {% endfor %}
+      <input type="submit" class="btn btn-default" name="society_register" value="Create Society"/>
+    </form>
+  </div>
+</div>
 {% endblock %}

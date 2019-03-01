@@ -6,5 +6,36 @@
 {% endblock %}
 
 {% block body_block %}
-    login
+<div class="card-deck">
+  <div class="card" >
+    <h2>User Login</h2>
+    <form id="user_form" method="post" class="form-inline" action="/eventsoc/login/">
+      {% csrf_token %}
+      {% for hidden in form.hidden_fields %}
+        {{ hidden }}
+      {% endfor %}
+      {% for field in form.visible_fields %}
+        {{ field.errors }}
+        {{ field.help_text }}
+        {{ field }}
+      {% endfor %}
+      <input type="submit" class="btn btn-default" name="user_login" value="Login"/>
+    </form>
+  </div>
+  <div class="card">
+    <h2>Society Login</h2>
+    <form id="society_form" method="post" class="form-inline" action="/eventsoc/login/">
+      {% csrf_token %}
+      {% for hidden in form.hidden_fields %}
+        {{ hidden }}
+      {% endfor %}
+      {% for field in form.visible_fields %}
+        {{ field.errors }}
+        {{ field.help_text }}
+        {{ field }}
+      {% endfor %}
+      <input type="submit" class="btn btn-default" name="society_login" value="Login"/>
+    </form>
+  </div>
+</div>
 {% endblock %}
