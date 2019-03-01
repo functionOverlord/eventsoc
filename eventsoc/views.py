@@ -51,7 +51,6 @@ def user_login(request):
 
 
 @login_required
->>>>>>> Login view and society and user forms
 def create_event(request):
     # event_form = EventForm()
     if request.method == 'POST':
@@ -149,7 +148,7 @@ def booked(request):
     return render(request, "eventsoc/booked.html", {})
 
 
-@login_required
+#@login_required
 def account(request):
     return render(request, "eventsoc/account.html", {})
 
@@ -158,7 +157,7 @@ def society(request):
     return render(request, "eventsoc/society.html", {})
 
 
-@login_required
+#@login_required
 def past_events(request):
     return render(request, "eventsoc/past_events.html", {})
 
