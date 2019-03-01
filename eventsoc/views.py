@@ -1,8 +1,9 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.contrib.auth.decorators import permission_required, login_required
-from eventsoc.forms import UserForm, SocietyForm
-
+from eventsoc.forms import UserForm, SocietyForm, EditEventForm
+from eventsoc.models import Society, Event
+from django.contrib.auth.models import User
 
 # Create your views here.
 
@@ -37,7 +38,7 @@ def login(request):
         else:
             print("Invalid login details:{0}, {1}".format(username, password))
     else:
-        return render(request, 'eventsoc/login.html')
+        return render(request, 'eventsoc/login.html', {})
 
 
 @login_required
@@ -73,14 +74,44 @@ def register(request):
                 'society_form': society_form,
                 'registered': registered})
 
-@login_required
+
+# @login_required
 def edit_event(request):
-    return render(request, "eventsoc/edit_event.html", {})
+    society = Society.objects.get(id=request.user.id)
+    event_form = society.event
+    form = EditEventForm(instance=event_form)
+
+    if request.user.is_authenticated() and request.user.id == society.society_id:
+        if request.method == 'POST':
+            form = EditEventForm(request.POST, instance=event_form)
+
+            if form.is_valid:
+                update = form.save()
+                update.society = society
+                update.save()
+            return render(request, 'wad_project/edit_event', {})
+    else:
+        form = EditEvent(instance=society)
 
 
-@login_required
+# @login_required
 def edit_profile(request):
-    return render(request, "eventsoc/edit_profile.html", {})
+    user = User.objects.get(id=request.user.id)
+    user_form = user.event
+    form = UserForm(instance=user_form)
+
+    if request.user.is_authenticated() and request.user.id == user.id:
+        if request.method == 'POST':
+            form = UserForm(request.POST, instance=user_form)
+
+            if form.is_valid:
+                update = form.save()
+                update.user = user
+                update.save()
+            return render(request, 'wad_project/edit_profile', {})
+    else:
+        form = UserForm(instance=user_form)
+    # return render(request, "eventsoc/edit_profile.html", {})
 
 
 @login_required
