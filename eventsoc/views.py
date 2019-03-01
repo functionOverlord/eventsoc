@@ -1,8 +1,9 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.contrib.auth.decorators import permission_required, login_required
-from eventsoc.forms import UserForm, SocietyForm
-
+from eventsoc.forms import UserForm, SocietyForm, EditEventForm
+from eventsoc.models import Society, Event
+from django.contrib.auth.models import User
 
 # Create your views here.
 
@@ -12,7 +13,6 @@ def index(request):
 
 
 def login(request):
-<<<<<<< HEAD
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -38,11 +38,7 @@ def login(request):
         else:
             print("Invalid login details:{0}, {1}".format(username, password))
     else:
-        return render(request, 'eventsoc/login.html')
-=======
-    return render(request, "eventsoc/login.html", {})
-
->>>>>>> 1f4920d94b1263c6ff2ea5d00e0f919558c85ada
+        return render(request, 'eventsoc/login.html', {})
 
 
 @login_required
@@ -51,7 +47,6 @@ def create_event(request):
 
 
 def register(request):
-<<<<<<< HEAD
     registered = False
     if request.method == 'POST':
         user_form = UserForm(data=request.POST)
@@ -78,19 +73,45 @@ def register(request):
                 {'user_form': user_form,
                 'society_form': society_form,
                 'registered': registered})
-=======
-    return render(request, "eventsoc/register.html", {})
 
->>>>>>> 1f4920d94b1263c6ff2ea5d00e0f919558c85ada
 
-@login_required
+# @login_required
 def edit_event(request):
-    return render(request, "eventsoc/edit_event.html", {})
+    society = Society.objects.get(id=request.user.id)
+    event_form = society.event
+    form = EditEventForm(instance=event_form)
+
+    if request.user.is_authenticated() and request.user.id == society.society_id:
+        if request.method == 'POST':
+            form = EditEventForm(request.POST, instance=event_form)
+
+            if form.is_valid:
+                update = form.save()
+                update.society = society
+                update.save()
+            return render(request, 'wad_project/edit_event', {})
+    else:
+        form = EditEvent(instance=society)
 
 
-@login_required
+# @login_required
 def edit_profile(request):
-    return render(request, "eventsoc/edit_profile.html", {})
+    user = User.objects.get(id=request.user.id)
+    user_form = user.event
+    form = UserForm(instance=user_form)
+
+    if request.user.is_authenticated() and request.user.id == user.id:
+        if request.method == 'POST':
+            form = UserForm(request.POST, instance=user_form)
+
+            if form.is_valid:
+                update = form.save()
+                update.user = user
+                update.save()
+            return render(request, 'wad_project/edit_profile', {})
+    else:
+        form = UserForm(instance=user_form)
+    # return render(request, "eventsoc/edit_profile.html", {})
 
 
 @login_required
@@ -114,9 +135,5 @@ def past_events(request):
 
 @login_required
 def user_logout(request):
-<<<<<<< HEAD
     logout(request)
     return HttpResponseRedirect(reverse('index'))
-=======
-    return render(request, "eventsoc/user_logout.html", {})
->>>>>>> 1f4920d94b1263c6ff2ea5d00e0f919558c85ada
