@@ -41,7 +41,7 @@ def login(request):
         return render(request, 'eventsoc/login.html', {})
 
 
-@login_required
+#@login_required
 def create_event(request):
     return render(request, "eventsoc/create_event.html", {})
 
@@ -114,12 +114,12 @@ def edit_profile(request):
     # return render(request, "eventsoc/edit_profile.html", {})
 
 
-@login_required
+#@login_required
 def booked(request):
     return render(request, "eventsoc/booked.html", {})
 
 
-@login_required
+#@login_required
 def account(request):
     return render(request, "eventsoc/account.html", {})
 
@@ -128,7 +128,7 @@ def society(request):
     return render(request, "eventsoc/society.html", {})
 
 
-@login_required
+#@login_required
 def past_events(request):
     return render(request, "eventsoc/past_events.html", {})
 

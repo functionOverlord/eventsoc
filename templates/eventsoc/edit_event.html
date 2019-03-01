@@ -7,16 +7,9 @@
 
 {% block body_block %}
 <h2>Edit Event</h2>
-<form id="edit_event_form" method="post" class="form-inline" action="/eventsoc/edit_event/">
+<form id="event_form" method="post" class="form-inline" action="/eventsoc/edit_html/">
   {% csrf_token %}
-  {% for hidden in form.hidden_fields %}
-    {{ hidden }}
-  {% endfor %}
-  {% for field in form.visible_fields %}
-    {{ field.errors }}
-    {{ field.help_text }}
-    {{ field }}
-  {% endfor %}
-  <input type="submit" class="btn btn-default" name="edit_event" value="submit"/>
+  {{ user_form.as_p }}
+  <input type="submit" class="btn btn-default" name="edit_event" value="Create"/>
 </form>
 {% endblock %}
