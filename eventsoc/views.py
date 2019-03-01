@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.contrib.auth.decorators import permission_required, login_required
-from eventsoc.forms import UserForm, SocietyForm, EditEventForm
+from eventsoc.forms import UserForm, SocietyForm, EditEventForm, EventForm
 from eventsoc.models import Society, Event
 from django.contrib.auth.models import User
 
@@ -43,7 +43,15 @@ def login(request):
 
 #@login_required
 def create_event(request):
-    return render(request, "eventsoc/create_event.html", {})
+    form = EventForm()
+    if request.method == 'POST':
+        form = EventForm(request.POST)
+        if form.is_valid():
+            form.save(commit = True)
+            return index(request)
+        else:
+            print(form.errors)
+    return render(request, "eventsoc/create_event.html", {'form': form})
 
 
 def register(request):

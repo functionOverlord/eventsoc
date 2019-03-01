@@ -10,6 +10,24 @@ class Place(models.Model):
     def __str__(self):
         return self.place_name
 
+class Category(models.Model):
+    """
+    A category of the Event such as "Workshops", "Talks", "Sports",
+    etc.
+    """
+    name = models.CharField(max_length=200, unique=True)
+    slug = models.SlugField(blank=True)
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super(Category, self).save(*args, **kwargs)
+
+    class Meta:
+        verbose_name_plural = 'Categories'
+
+    def __str__(self):
+        return self.name
+
 class Society(models.Model):
     society_id = models.CharField(max_length=30)
     name = models.CharField(max_length=30)
@@ -20,6 +38,7 @@ class Society(models.Model):
        return self.username
 
 class Event(models.Model):
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
     event_id = models.CharField(max_length=30)
     title = models.CharField(max_length=100)
     event_date = models.DateTimeField(help_text="Please use the format: YYYY-MM-DD")
