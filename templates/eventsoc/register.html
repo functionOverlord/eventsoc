@@ -13,7 +13,7 @@
 <div class="card-deck">
   <div class="card" >
     <h2>User Registration</h2>
-      <form id="user_form" method="post" action="/eventsoc/register/">
+      <form id="user_form" method="post" action="{% url 'register' %}" enctype="multipart/form-data">
       {% csrf_token %}
       {{ user_form.as_p }}
       <input type="submit" class="btn btn-primary" name="user_register" value="Create User"/>
@@ -21,7 +21,7 @@
   </div>
   <div class="card">
     <h2>Society Registration</h2>
-    <form id="society_form" method="post" action="/eventsoc/register/">
+    <form id="society_form" method="post" action="{% url 'register' %}"  enctype="multipart/form-data">
       {% csrf_token %}
       {{ society_form.as_p }}
       <input type="submit" class="btn btn-primary" name="society_register" value="Create Society"/>
