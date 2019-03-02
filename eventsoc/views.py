@@ -59,21 +59,23 @@ def register(request):
     if request.method == 'POST':
         user_form = UserForm(data=request.POST)
         society_form = SocietyForm(data=request.POST)
-        if user_form.is_valid():
-            user = user_form.save()
-            user.set_password(user.password)
-            user.save()
-            registered = True
-        elif user_form.is_valid() == False:
-            print(user_form.errors)
-
-        if society_form.is_valid:
-            society = society_form.save()
-            society.set_password(society.password)
-            society.save()
-            registered = True
-        elif society_form.is_valid == False:
-            print(society_form.errors)
+        if 'user_register' in request.POST:
+            if user_form.is_valid():
+                user = user_form.save()
+                user.set_password(user.password)
+                user.save()
+                registered = True
+            elif user_form.is_valid() == False:
+                print(user_form.errors)
+                
+        elif 'society_register' in request.POST:
+            if society_form.is_valid():
+                society = society_form.save()
+                society.set_password(society.password)
+                society.save()
+                registered = True
+            elif society_form.is_valid == False:
+                print(society_form.errors)
     else:
         user_form = UserForm()
         society_form = SocietyForm()
