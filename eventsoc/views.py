@@ -1,10 +1,11 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse
+from django.urls import reverse
 from django.contrib.auth.decorators import permission_required, login_required
 from eventsoc.forms import UserForm, SocietyForm, EditEventForm, EventForm
 from eventsoc.models import Society, Event
 from django.contrib.auth.models import User
-
+from django.contrib.auth import authenticate, login, logout
 # Create your views here.
 
 
@@ -12,21 +13,22 @@ def index(request):
     return render(request, "eventsoc/index.html", {})
 
 
-def login(request):
+def user_login(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
         user = authenticate(username=username, password=password)
+
         if user:
             if user.is_active:
                 login(request, user)
-                return HttpResponseRedirect(reverse('eventsoc/index.html'))
+                return HttpResponseRedirect(reverse('index'))
             else:
                 return HttpResponse("account disabled?")
         else:
             print("Invalid login details:{0}, {1}".format(username, password))
 
-        soc_username = request.POST.get('username')
+        """soc_username = request.POST.get('username')
         soc_password = request.POST.get('password')
         society = authenticate(username=soc_username, password=soc_password)
         if society:
@@ -36,7 +38,7 @@ def login(request):
             else:
                 return HttpResponse("Invalid login details")
         else:
-            print("Invalid login details:{0}, {1}".format(username, password))
+            print("Invalid login details:{0}, {1}".format(username, password))"""
     else:
         return render(request, 'eventsoc/login.html', {})
 
@@ -67,7 +69,7 @@ def register(request):
                 registered = True
             elif user_form.is_valid() == False:
                 print(user_form.errors)
-                
+
         elif 'society_register' in request.POST:
             if society_form.is_valid():
                 society = society_form.save()
