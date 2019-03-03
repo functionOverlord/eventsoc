@@ -6,5 +6,10 @@
 {% endblock %}
 
 {% block body_block %}
-    create event
+<h2>Create Event</h2>
+<form id="event_form" method="post" action="/eventsoc/create_event/">
+  {% csrf_token %}
+  {{ user_form.as_p }}
+  <input type="submit" class="btn btn-primary"  name="create_event" value="Create"/>
+</form>
 {% endblock %}
