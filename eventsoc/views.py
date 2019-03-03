@@ -31,7 +31,7 @@ def user_login(request):
             return(HttpResponse("Invalid login details"))
             print("Invalid login details:{0}, {1}".format(username, password))
 
-        soc_username = request.POST.get('username')
+        """soc_username = request.POST.get('username')
         soc_password = request.POST.get('password')
         society = authenticate(username=soc_username, password=soc_password)
         if society:
@@ -41,7 +41,7 @@ def user_login(request):
             else:
                 return HttpResponse("Invalid login details")
         else:
-            print("Invalid login details:{0}, {1}".format(username, password))
+            print("Invalid login details:{0}, {1}".format(username, password))"""
     else:
         return render(request, 'eventsoc/login.html', {})
 
