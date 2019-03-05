@@ -31,7 +31,7 @@ def user_login(request):
             return(HttpResponse("Invalid login details"))
             print("Invalid login details:{0}, {1}".format(username, password))
 
-        """soc_username = request.POST.get('username')
+        soc_username = request.POST.get('username')
         soc_password = request.POST.get('password')
         society = authenticate(username=soc_username, password=soc_password)
         if society:
@@ -41,7 +41,7 @@ def user_login(request):
             else:
                 return HttpResponse("Invalid login details")
         else:
-            print("Invalid login details:{0}, {1}".format(username, password))"""
+            print("Invalid login details:{0}, {1}".format(username, password))
     else:
         return render(request, 'eventsoc/login.html', {})
 
@@ -95,7 +95,10 @@ def register(request):
                 'society_form': society_form,
                 'registered': registered})
 
-@login_required
+
+# @login_required
+# @permission_required(eventsoc.is_society)
+# User needs to select an event
 def edit_event(request):
     # society = NewUser.objects.get(id=request.user.id)
     # event_form = EventForm()
