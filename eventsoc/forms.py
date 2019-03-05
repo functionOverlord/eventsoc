@@ -1,7 +1,8 @@
 from django import forms
 from django.forms import ModelChoiceField
+# from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from eventsoc.models import UserProfile, Society, Event, Category, Place
+from eventsoc.models import NewUser, Society, Event, Category, Place
 
 # May only need one of these event forms
 # Might not want to have queryset
@@ -41,16 +42,39 @@ class EditEventForm(forms.ModelForm):
     #     fields = ('username', 'password', 'email')
 
 
+# class UserForm(UserCreationForm):
 class UserForm(forms.ModelForm):
+    # Don't need this password bit for UserCreationForm
     password = forms.CharField(widget = forms.PasswordInput())
 
+    # class Meta(UserCreationForm.Meta):
     class Meta:
-        model = User
+        model = NewUser
         fields = ('username', 'password', 'email')
 
+    def save(self, commit=True):
+        userAccount = super().save(commit=False)
+        userAccount.is_user = True
+        if commit:
+            userAccount.save()
+        return userAccount
+
+# class SocietyForm(UserCreationForm):
 class SocietyForm(forms.ModelForm):
     password = forms.CharField(widget = forms.PasswordInput())
+    email = forms.CharField(required=True)
+    logo = forms.ImageField(required=False)
 
+    # class Meta(UserCreationForm.Meta):
     class Meta:
-        model = Society
-        fields = ('name', 'password', 'email', 'logo')
+        model = NewUser
+        fields = ('username', 'password', 'email', 'logo')
+
+    def save(self):
+        user = super().save(commit=False)
+        user.is_society = True
+        user.save()
+        society = Society.objects.create(user=user)
+        society.email = self.cleaned_data['email']
+        society.logo = self.cleaned_data['logo']
+        return user

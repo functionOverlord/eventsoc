@@ -1,5 +1,14 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AbstractUser
+
+class NewUser(AbstractUser):
+    is_user = models.BooleanField('student status', default=False)
+    is_society = models.BooleanField('society status', default=False)
+
+    # class Meta:
+    #     permissions = (
+    #     ('is_user', "" )
+    #     )
 
 class Place(models.Model):
     place_name = models.CharField(max_length=50)
@@ -29,13 +38,26 @@ class Category(models.Model):
         return self.name
 
 class Society(models.Model):
-    society_id = models.CharField(max_length=30)
-    name = models.CharField(max_length=30)
+    user = models.OneToOneField(NewUser, on_delete=models.CASCADE, related_name='society_user', default = 'null')
     email = models.CharField(max_length=50)
     logo = models.ImageField(upload_to='logos')
 
+    # class Meta:
+    #     permissions = (
+    #     ('is_society', "A society user" )
+    #     )
+
     def __str__(self):
-       return self.username
+        return self.user.username
+
+# class Society(models.Model):
+#     society_id = models.CharField(max_length=30)
+#     name = models.CharField(max_length=30)
+#     email = models.CharField(max_length=50)
+#     logo = models.ImageField(upload_to='logos')
+#
+#     def __str__(self):
+#        return self.username
 
 class Event(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
@@ -47,7 +69,7 @@ class Event(models.Model):
     price = models.IntegerField(blank=True, null=True)
     description = models.CharField(max_length=10000)
     picture = models.ImageField(upload_to='events')
-    creator = models.ForeignKey(Society, on_delete=models.CASCADE)
+    creator = models.ForeignKey(Society, on_delete=models.CASCADE, related_name='society_event')
 
     def __str__(self):
         return self.title
@@ -57,21 +79,13 @@ class Event(models.Model):
             return True
         return False
 
-class UserProfile(models.Model):
-    # Links UserProfile to aUser model instance
-    user = models.OneToOneField(User, default=None, null=True, on_delete=models.CASCADE)
-    email = models.CharField(max_length=50)
-
-    def __str__(self):
-        return self.user.username
-
 
 class Booking(models.Model):
-    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
-    event = models.ForeignKey(Event, on_delete=models.CASCADE)
-    society = models.ForeignKey(Society, on_delete=models.CASCADE)
+    user = models.ForeignKey(NewUser, on_delete=models.CASCADE, related_name='user_booking')
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='event_booking')
+    society = models.ForeignKey(Society, on_delete=models.CASCADE, related_name='society_booking')
 
 class Bookmark(models.Model):
-    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
-    event = models.ForeignKey(Event, on_delete=models.CASCADE)
-    society = models.ForeignKey(Society, on_delete=models.CASCADE)
+    user = models.ForeignKey(NewUser, on_delete=models.CASCADE, related_name='user_bookmarked')
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='event_bookmarked')
+    society = models.ForeignKey(Society, on_delete=models.CASCADE, related_name='society_bookmarked')
