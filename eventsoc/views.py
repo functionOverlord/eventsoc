@@ -1,11 +1,11 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
-from django.contrib.auth.decorators import permission_required, login_required
+from django.contrib.auth.decorators import user_passes_test, login_required
 from eventsoc.forms import UserForm, SocietyForm, EditEventForm, EventForm
 from eventsoc.models import Society, Event, NewUser
 # from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 # Create your views here.
 
 
@@ -21,11 +21,9 @@ def user_login(request):
 
         if user:
             if user.is_active:
-                print("here")
                 login(request, user)
                 return HttpResponseRedirect(reverse('index'))
             else:
-                print("here")
                 return HttpResponse("account disabled")
         else:
             return(HttpResponse("Invalid login details"))
@@ -47,9 +45,8 @@ def user_login(request):
 
 
 #@login_required
-# @permission_required(eventsoc.is_society)
+@user_passes_test(lambda u: u.is_society, login_url='index')
 def create_event(request):
-    # event_form = EventForm()
     if request.method == 'POST':
         event_form = EventForm(request.POST)
         if event_form.is_valid():
@@ -73,6 +70,7 @@ def register(request):
                 user.set_password(user.password)
                 user.save()
                 registered = True
+                login(request, user)
             elif user_form.is_valid() == False:
                 print(user_form.errors)
 
@@ -82,6 +80,7 @@ def register(request):
                 society.set_password(society.password)
                 society.save()
                 registered = True
+                login(request, society)
             elif society_form.is_valid == False:
                 print(society_form.errors)
     else:
@@ -96,51 +95,56 @@ def register(request):
 # @login_required
 # @permission_required(eventsoc.is_society)
 # User needs to select an event
+@user_passes_test(lambda u: u.is_society, login_url='index')
 def edit_event(request):
     # society = NewUser.objects.get(id=request.user.id)
     # event_form = EventForm()
     # form = EditEventForm(instance=event_form)
-    if request.user.is_authenticated:
-        society = request.user
-    else:
-        return(HttpResponse("Not logged in"))
-
-    # Seems to allways return false
-    print(society.is_society)
+    # if request.user.is_authenticated:
+    #     society = request.user
+    # else:
+    #     return(HttpResponse("Not logged in"))
 
     if request.user.is_authenticated: #and society.is_society:
+        # request.method returns get all the time
         if request.method == 'POST':
+            society = request.user
+            # instance should be an event
             # form = EditEventForm(request.POST, instance=event_form)
-            form = EditEventForm(request.POST)
+            event_form = EventForm(request.POST)
             if form.is_valid:
                 update = form.save()
                 update.society = society
                 update.save()
-            return render(request, 'wad_project/edit_event', {'event_form': form})
+            # return render(request, 'eventsoc/edit_event', {'event_form': event_form})
         else:
-            return(HttpResponse("No input"))
+            return(HttpResponse("No input, request method = " + request.method))
     else:
         return(HttpResponse("Not a society"))
-
+    return render(request, 'eventsoc/edit_event.html', {'event_form': event_form})
 
 # @login_required
+@user_passes_test(lambda u: u.is_user, login_url='index')
 def edit_profile(request):
     user = NewUser.objects.get(id=request.user.id)
-    user_form = user.event
-    form = UserForm(instance=user_form)
+    # user_form = user.event
+    form = UserForm(instance=user)
 
-    if request.user.is_authenticated() and request.user.is_user:
+    if request.user.is_authenticated and request.user.is_user:
         if request.method == 'POST':
-            form = UserForm(request.POST, instance=user_form)
+            form = UserForm(request.POST, instance=user)
 
             if form.is_valid:
                 update = form.save()
                 update.user = user
-                update.save()
-            return render(request, 'wad_project/edit_profile', {})
+                form.save()
+                # new_user = authenticate(username=form.username, password=form.password)
+                update_session_auth_hash(request, user)
+                login(request, user)
+            # return render(request, 'eventsoc/edit_profile', {'form': form})
     else:
-        form = UserForm(instance=user_form)
-    # return render(request, "eventsoc/edit_profile.html", {})
+        form = UserForm(instance=user)
+    return render(request, 'eventsoc/edit_profile.html', {'form': form})
 
 
 #@login_required

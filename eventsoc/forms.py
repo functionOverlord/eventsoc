@@ -21,6 +21,11 @@ class EventForm(forms.ModelForm):
         model = Event
         fields = ('title', 'category', 'event_date', 'time', 'place', 'price', 'description', 'picture')
 
+    def save(self, commit=True):
+        event = super().save(commit=False)
+        event.creator = super().NewUser.objects.get()
+
+
 class EditEventForm(forms.ModelForm):
     title = forms.CharField(required=True)
     category = ModelChoiceField(required=True, queryset=Category.objects.all())
@@ -33,7 +38,7 @@ class EditEventForm(forms.ModelForm):
 
     class Meta:
         model = Event
-        fields = ('title', 'event_date', 'time', 'price', 'description', 'picture')
+        fields = ('title', 'category', 'event_date', 'time', 'place', 'price', 'description', 'picture')
 
 # class EditProfile(forms.ModelForm):
     #
