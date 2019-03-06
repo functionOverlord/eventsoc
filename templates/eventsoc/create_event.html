@@ -6,10 +6,12 @@
 {% endblock %}
 
 {% block body_block %}
-<h2>Create Event</h2>
-<form id="event_form" method="post" action="/eventsoc/create_event/">
-  {% csrf_token %}
-  {{ event_form.as_p }}
-  <input type="submit" class="btn btn-primary"  name="create_event" value="Create"/>
-</form>
+<div class="container col-md-3 col-sm-6">
+  <h2>Create Event</h2>
+  <form id="event_form" method="post" action="/eventsoc/create_event/">
+    {% csrf_token %}
+    {{ event_form.as_p }}
+    <input type="submit" class="btn btn-primary"  name="create_event" value="Create"/>
+  </form>
+</div>
 {% endblock %}

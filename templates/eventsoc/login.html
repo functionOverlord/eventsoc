@@ -6,10 +6,10 @@
 {% endblock %}
 
 {% block body_block %}
-<div class="col-sm-6 offset-sm-3 text-center" >
-  <div class="card">
+<div class="container col-md-3 col-sm-6" >
+  </div>
     <h2>Login</h2>
-    <form id="user_form" method="post" action="{% url 'login' %}">
+    <form class="col-md-6" id="user_form" method="post" action="{% url 'login' %}">
       {% csrf_token %}
       <div class="form-group">
         Username:<input type="text" class="form-control" id="username" name="username" value="" size="50" />
@@ -17,14 +17,7 @@
       <div class="form-group">
         Password: <input type="password" class="form-control"  name="password" value="" size="50" />
       </div>
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="" id="society_check">
-        <label class="form-check-label" for="society_check">
-          Sign as Society
-        </label>
-      </div>
       <input type="submit" class="btn btn-primary" value="submit" />
     </form>
  </div>
-</div>
 {% endblock %}
