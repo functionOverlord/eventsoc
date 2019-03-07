@@ -212,7 +212,7 @@ coverage.xml
 *.log
 local_settings.py
 db.sqlite3
-0001_initial.py
+migrations/
 
 # Flask stuff:
 instance/
