@@ -50,21 +50,28 @@
                 </button>
 
                 <div class="collapse navbar-collapse" id="navbarResponsive">
-
-                    <!-- TODO ONLY SHOW THESE IF USER IS LOGGED IN -->
-                    <ul class="navbar-nav">
-                        <li class="nav-link"><a class="nav-link" href="/booked">Booked Events</a></li>
-                        <li class="nav-link"><a class="nav-link" href="#">Bookmarked events</a></li>
-                    </ul>
-
-                    <!-- TODO REPLACE WITH ACCOUNT BUTTON ONCE LOGGED IN-->
-    {#                TODO DOUBLE CHECK THE USE OF HREF -> USE {% URL 'PAGE-NAME' %} INSTEAD?#}
-                    <ul class="navbar-nav ml-auto">
-                        <form class="form-inline">
-                            <button class="btn btn-outline-success" type="button" onclick="location.href='/login'">Login</button>
-                            <button class="btn btn-outline-success" type="button" onclick="location.href='/register'">Register</button>
-                        </form>
-                    </ul>
+                  {% if user.is_authenticated %}
+                  <ul class="navbar-nav">
+                      <li class="nav-link"><a class="nav-link" href="/booked">Booked Events</a></li>
+                      <li class="nav-link"><a class="nav-link" href="#">Bookmarked events</a></li>
+                  </ul>
+                  {% endif %}
+                  {#                TODO DOUBLE CHECK THE USE OF HREF -> USE {% URL 'PAGE-NAME' %} INSTEAD?#}
+                  {% if user.is_authenticated %}
+                  <ul class="navbar-nav ml-auto">
+                      <form class="form-inline">
+                          <button class="btn btn-outline-success" type="button" onclick="location.href='/account'">Account</button>
+                          <button class="btn btn-outline-success" type="button" onclick="location.href='/user_logout'">Logout</button>
+                      </form>
+                  </ul>
+                  {% else %}
+                  <ul class="navbar-nav ml-auto">
+                      <form class="form-inline">
+                          <button class="btn btn-outline-success" type="button" onclick="location.href='/login'">Login</button>
+                          <button class="btn btn-outline-success" type="button" onclick="location.href='/register'">Register</button>
+                      </form>
+                  </ul>
+                  {% endif %}
                 </div>
             </div>
         </nav>
