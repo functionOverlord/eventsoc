@@ -70,17 +70,26 @@ def register(request):
                 user.set_password(user.password)
                 user.save()
                 registered = True
+<<<<<<< HEAD
                 login(request, user)
             elif user_form.is_valid() == False:
                 print(user_form.errors)
 
+=======
+            elif user_form.is_valid() == False:
+                print(user_form.errors)
+                
+>>>>>>> a5fe824... Added user registration
         elif 'society_register' in request.POST:
             if society_form.is_valid():
                 society = society_form.save()
                 society.set_password(society.password)
                 society.save()
                 registered = True
+<<<<<<< HEAD
                 login(request, society)
+=======
+>>>>>>> a5fe824... Added user registration
             elif society_form.is_valid == False:
                 print(society_form.errors)
     else:
