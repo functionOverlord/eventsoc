@@ -9,23 +9,26 @@ from eventsoc.models import NewUser, Society, Event, Category, Place
 
 class EventForm(forms.ModelForm):
     title = forms.CharField(required=True)
-    category = ModelChoiceField(required=True, queryset=Category.objects.all())
+    # category = ModelChoiceField(required=True, queryset=Category.objects.all())
     event_date = forms.DateTimeField(required=True, help_text="Please use the format: YYYY-MM-DD")
     time = forms.TimeField(required = True, help_text='Please use the format: <em>HH:MM:SS<em')
-    place = forms.ModelChoiceField(required = True, queryset=Place.objects.all())
+    place_name = forms.CharField(max_length=50)
+    room = forms.CharField(max_length=10)
+    address = forms.CharField(max_length=50)
     price = forms.IntegerField(required=True, initial=0)
     description = forms.CharField(required=True, max_length=10000)
+    capacity = forms.IntegerField(required=True, initial=0)
     picture = forms.ImageField()
 
     class Meta:
         model = Event
-        fields = ('title', 'category', 'event_date', 'time', 'place', 'price', 'description', 'picture')
+        fields = ('title', 'event_date', 'time', 'place_name', 'room', 'address', 'price', 'description', 'capacity', 'picture')
 
     def save(self, commit=True):
         event = super().save(commit=False)
         event.creator = super().NewUser.objects.get()
 
-
+# Probably won't be needed, currently isn't used
 class EditEventForm(forms.ModelForm):
     title = forms.CharField(required=True)
     category = ModelChoiceField(required=True, queryset=Category.objects.all())

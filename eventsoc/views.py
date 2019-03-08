@@ -10,7 +10,9 @@ from django.contrib.auth import authenticate, login, logout, update_session_auth
 
 
 def index(request):
-    return render(request, "eventsoc/index.html", {})
+    # Possibly swap capacity for popularity
+    event_list = Event.objects.order_by('-capacity')[:3]
+    return render(request, "eventsoc/index.html", {'event_list': event_list})
 
 
 def user_login(request):
@@ -44,6 +46,9 @@ def user_login(request):
         return render(request, 'eventsoc/login.html', {})
 
 
+def event(request):
+    return render(request, 'event')
+
 #@login_required
 @user_passes_test(lambda u: u.is_society, login_url='index')
 def create_event(request):
@@ -51,6 +56,8 @@ def create_event(request):
         event_form = EventForm(request.POST)
         if event_form.is_valid():
             event_form.save(commit = True)
+            # Need to create a slug event url to direct user to the event page they've created
+            # redirect = 'eventsoc/'
             # return index(request)
         else:
             print(form.errors)
@@ -109,6 +116,7 @@ def edit_event(request):
         # request.method returns get all the time
         if request.method == 'POST':
             society = request.user
+            events = Event.objects.get(creator=society.creator)
             # instance should be an event
             # form = EditEventForm(request.POST, instance=event_form)
             event_form = EventForm(request.POST)
@@ -121,7 +129,7 @@ def edit_event(request):
             return(HttpResponse("No input, request method = " + request.method))
     else:
         return(HttpResponse("Not a society"))
-    return render(request, 'eventsoc/edit_event.html', {'event_form': event_form})
+    return render(request, 'eventsoc/edit_event.html', {'event_form': event_form, 'events': events})
 
 # @login_required
 @user_passes_test(lambda u: u.is_user, login_url='index')
@@ -152,13 +160,22 @@ def booked(request):
     return render(request, "eventsoc/booked.html", {})
 
 
-#@login_required
+@login_required
+# @user_passes_test(lambda u: u.is_user, login_url='index')
 def account(request):
-    return render(request, "eventsoc/account.html", {})
+    user = NewUser.objects.get(id=request.user.id)
+    if(user.is_society):
+        account_form = SocietyForm(instance=society)
+        return render(request, "eventsoc/account.html", {'account_form': account_form})
+    else:
+        account_form = UserForm(instance=user)
+        return render(request, "eventsoc/account.html", {'account_form': account_form})
 
-
+@user_passes_test(lambda u: u.is_society, login_url='index')
 def society(request):
-    return render(request, "eventsoc/society.html", {})
+    society = NewUser.objects.get(id=request.user.id)
+    form = SocietyForm(instance=society)
+    return render(request, "eventsoc/society.html", {'form': form})
 
 
 #@login_required
