@@ -3,7 +3,7 @@ from django.forms import ModelChoiceField
 # from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from eventsoc.models import NewUser, Society, Event, Category, Place
-
+from django.contrib.auth.forms import UserCreationForm
 # May only need one of these event forms
 # Might not want to have queryset
 
@@ -51,14 +51,52 @@ class EditEventForm(forms.ModelForm):
 
 
 # class UserForm(UserCreationForm):
-class UserForm(forms.ModelForm):
-    # Don't need this password bit for UserCreationForm
-    password = forms.CharField(widget = forms.PasswordInput())
+class UserForm(UserCreationForm):
+    email = forms.EmailField(max_length=254, required=True, help_text='Required. Inform a valid email address.')
 
-    # class Meta(UserCreationForm.Meta):
     class Meta:
         model = NewUser
-        fields = ('username', 'password', 'email')
+        fields = ('username', 'password1', 'password2', 'email')
+
+    def clean_email(self):
+        """
+        check email already exists
+        :return: cleaned email
+        """
+        email = self.cleaned_data.get('email', None)
+        if NewUser.objects.filter(email=email):
+            raise forms.ValidationError('That email is already in registered!')
+        return email
+
+    def clean_password2(self):
+        password1 = self.cleaned_data.get("password1")
+        password2 = self.cleaned_data.get("password2")
+
+        if not self.validate_password_strength():
+            raise forms.ValidationError(_('Password must contain at least 1 digit and letter.'))    
+        return password2
+
+    def validate_password_strength(self):
+        """
+        Validates that a password is at least 7 characters long and had
+        at least 1 digit and 1 letter
+        """
+        min_length = 8
+        value = self.cleaned_data['password1']
+
+        # Check min value
+        if len(value) < min_length:
+            raise form.ValidationError('Password must be at least {0} characters long'.format(min_length))
+
+        # Check if the password contains a digit
+        if not any(char.isdigit() for char in value):
+            raise forms.ValidationError('Password must contain at least 1 digit')
+
+        # Check if the password contain a letter
+        if not any(char.isalpha() for char in value):
+            raise forms.ValidationError('Password must contain at least 1 letter')
+
+        return True
 
     def save(self, commit=True):
         userAccount = super().save(commit=False)
@@ -68,15 +106,53 @@ class UserForm(forms.ModelForm):
         return userAccount
 
 # class SocietyForm(UserCreationForm):
-class SocietyForm(forms.ModelForm):
-    password = forms.CharField(widget = forms.PasswordInput())
-    email = forms.CharField(required=True)
+class SocietyForm(UserCreationForm):
+    email = forms.EmailField(max_length=254, required=True, help_text='Required. Inform a valid email address.')
     logo = forms.ImageField(required=False)
 
-    # class Meta(UserCreationForm.Meta):
     class Meta:
         model = NewUser
-        fields = ('username', 'password', 'email', 'logo')
+        fields = ('username', 'password1', 'password2', 'email', 'logo')
+
+    def clean_email(self):
+        """
+        check email already exists
+        :return: cleaned email
+        """
+        email = self.cleaned_data.get('email', None)
+        if NewUser.objects.filter(email=email):
+            raise forms.ValidationError('That email is already in registered!')
+        return email
+
+    def clean_password2(self):
+        password1 = self.cleaned_data.get("password1")
+        password2 = self.cleaned_data.get("password2")
+
+        if not self.validate_password_strength():
+            raise forms.ValidationError(_('Password must contain at least 1 digit and letter.'))    
+        return password2
+
+    def validate_password_strength(self):
+        """
+        Validates that a password is at least 7 characters long and had
+        at least 1 digit and 1 letter
+        """
+        min_length = 8
+        value = self.cleaned_data['password1']
+
+        # Check min value
+        if len(value) < min_length:
+            raise form.ValidationError('Password must be at least {0} characters long'.format(min_length))
+
+        # Check if the password contains a digit
+        if not any(char.isdigit() for char in value):
+            raise forms.ValidationError('Password must contain at least 1 digit')
+
+        # Check if the password contain a letter
+        if not any(char.isalpha() for char in value):
+            raise forms.ValidationError('Password must contain at least 1 letter')
+
+        return True
 
     def save(self):
         user = super().save(commit=False)

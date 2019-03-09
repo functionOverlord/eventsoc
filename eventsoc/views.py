@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.contrib.auth.decorators import user_passes_test, login_required
 from eventsoc.forms import UserForm, SocietyForm, EditEventForm, EventForm
 from eventsoc.models import Society, Event, NewUser
-# from django.contrib.auth.models import User
+from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 # Create your views here.
 

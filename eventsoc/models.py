@@ -4,6 +4,7 @@ from django.contrib.auth.models import User, AbstractUser
 class NewUser(AbstractUser):
     is_user = models.BooleanField('student status', default=False)
     is_society = models.BooleanField('society status', default=False)
+    email = models.EmailField(max_length=254, blank=False, help_text='Required. Inform a valid email address.')
 
     # class Meta:
     #     permissions = (
@@ -39,7 +40,6 @@ class Category(models.Model):
 
 class Society(models.Model):
     user = models.OneToOneField(NewUser, on_delete=models.CASCADE, related_name='society_user', default = 'null')
-    email = models.CharField(max_length=50)
     logo = models.ImageField(upload_to='logos')
 
 
@@ -50,15 +50,6 @@ class Society(models.Model):
 
     def __str__(self):
         return self.user.username
-
-# class Society(models.Model):
-#     society_id = models.CharField(max_length=30)
-#     name = models.CharField(max_length=30)
-#     email = models.CharField(max_length=50)
-#     logo = models.ImageField(upload_to='logos')
-#
-#     def __str__(self):
-#        return self.username
 
 class Event(models.Model):
     # category = models.ForeignKey(Category, on_delete=models.CASCADE)
