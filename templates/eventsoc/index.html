@@ -16,6 +16,7 @@
     <div class="carousel-inner">
         {% for event in trending_events %}
             <div class="carousel-item {% if forloop.first %}active{% endif %}">
+            {% comment %} TODO alt? {% endcomment %}
             <img src="{{MEDIA_URL}}{{ event.picture }}" class="d-block w-100" alt="event1">
             <div class="carousel-caption d-none d-md-block">
                 {{ event.title }}
@@ -40,28 +41,18 @@
 <hr class="my-4">
 
 <div class="container-fluid">
-<div class="row">
-    <div class="col-md-4">
-        <div class="card">
-            <img class="card-img-top" src="{{ MEDIA_URL }}event1.jpg" alt="...">
-            <div class="card-body">
-                <h4 class="card-title">Argument clinic</h4>
-                <p class="card-text">Some description of argument clinic</p>
-                <a href="#" class="btn btn-primary">Button</a>
+    <div class="row">
+        {% for event in upcoming_events %}
+            <div class="card-deck col-md-4">
+                <div class="card" onclick="location.href='events/{{ event.pk }}'">
+                    <img class="card-img-top" src="{{ MEDIA_URL }}{{ event.picture }}" alt="...">
+                    <div class="card-body">
+                        <h4 class="card-title">{{ event.title }}</h4>
+                        <p class="card-text">Some description of event</p>
+                    </div>
+                </div>
             </div>
-        </div>
+        {% endfor %}
     </div>
-
-    <div class="col-md-4">
-        <div class="card">
-            <img class="card-img-top" src="{{ MEDIA_URL }}event2.jpg" alt="...">
-            <div class="card-body">
-                <h4 class="card-title">Rango</h4>
-                <p class="card-text">Some description of Rango</p>
-                <a href="#" class="btn btn-primary">Button</a>
-            </div>
-        </div>
-    </div>
-</div>
 </div>
 {% endblock %}

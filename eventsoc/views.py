@@ -13,8 +13,10 @@ from django.shortcuts import redirect
 
 
 def index(request):
-    trending_events = Event.objects.order_by('-popularity')[:3]
-    return render(request, "eventsoc/index.html", {'trending_events': trending_events})
+    trending_events = Event.objects.order_by('-popularity')[:5]  # TODO correct sorting order?
+    upcoming_events = Event.objects.order_by('date')
+    return render(request, "eventsoc/index.html", {'trending_events': trending_events,
+                                                   'upcoming_events': upcoming_events})
 
 
 def user_login(request):
@@ -30,7 +32,7 @@ def user_login(request):
             else:
                 return HttpResponse("account disabled")
         else:
-            return (HttpResponse("Invalid login details"))
+            return HttpResponse("Invalid login details")
             print("Invalid login details:{0}, {1}".format(username, password))
 
         soc_username = request.POST.get('username')
