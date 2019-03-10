@@ -6,6 +6,8 @@ from eventsoc.forms import UserForm, SocietyForm, EditEventForm, EventForm
 from eventsoc.models import Society, Event, NewUser
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
+
+
 # Create your views here.
 
 
@@ -28,7 +30,7 @@ def user_login(request):
             else:
                 return HttpResponse("account disabled")
         else:
-            return(HttpResponse("Invalid login details"))
+            return (HttpResponse("Invalid login details"))
             print("Invalid login details:{0}, {1}".format(username, password))
 
         soc_username = request.POST.get('username')
@@ -49,13 +51,14 @@ def user_login(request):
 def event(request):
     return render(request, 'event')
 
-#@login_required
+
+# @login_required
 @user_passes_test(lambda u: u.is_society, login_url='index')
 def create_event(request):
     if request.method == 'POST':
         event_form = EventForm(request.POST)
         if event_form.is_valid():
-            event_form.save(commit = True)
+            event_form.save(commit=True)
             # Need to create a slug event url to direct user to the event page they've created
             # redirect = 'eventsoc/'
             # return index(request)
@@ -78,7 +81,7 @@ def register(request):
                 user.save()
                 registered = True
                 login(request, user)
-            elif user_form.is_valid() == False:
+            elif not user_form.is_valid():
                 print(user_form.errors)
 
         elif 'society_register' in request.POST:
@@ -88,15 +91,15 @@ def register(request):
                 society.save()
                 registered = True
                 login(request, society)
-            elif society_form.is_valid == False:
+            elif not society_form.is_valid:
                 print(society_form.errors)
     else:
         user_form = UserForm()
         society_form = SocietyForm()
     return render(request, 'eventsoc/register.html',
-                {'user_form': user_form,
-                'society_form': society_form,
-                'registered': registered})
+                  {'user_form': user_form,
+                   'society_form': society_form,
+                   'registered': registered})
 
 
 # @login_required
@@ -112,7 +115,7 @@ def edit_event(request):
     # else:
     #     return(HttpResponse("Not logged in"))
 
-    if request.user.is_authenticated: #and society.is_society:
+    if request.user.is_authenticated:  # and society.is_society:
         # request.method returns get all the time
         if request.method == 'POST':
             society = request.user
@@ -124,12 +127,12 @@ def edit_event(request):
                 update = form.save()
                 update.society = society
                 update.save()
-            # return render(request, 'eventsoc/edit_event', {'event_form': event_form})
         else:
-            return(HttpResponse("No input, request method = " + request.method))
+            return HttpResponse("No input, request method = " + request.method)
     else:
-        return(HttpResponse("Not a society"))
+        return HttpResponse("Not a society")
     return render(request, 'eventsoc/edit_event.html', {'event_form': event_form, 'events': events})
+
 
 # @login_required
 @user_passes_test(lambda u: u.is_user, login_url='index')
@@ -149,13 +152,12 @@ def edit_profile(request):
                 # new_user = authenticate(username=form.username, password=form.password)
                 update_session_auth_hash(request, user)
                 login(request, user)
-            # return render(request, 'eventsoc/edit_profile', {'form': form})
     else:
         form = UserForm(instance=user)
     return render(request, 'eventsoc/edit_profile.html', {'form': form})
 
 
-#@login_required
+# @login_required
 def booked(request):
     return render(request, "eventsoc/booked.html", {})
 
@@ -164,12 +166,13 @@ def booked(request):
 # @user_passes_test(lambda u: u.is_user, login_url='index')
 def account(request):
     user = NewUser.objects.get(id=request.user.id)
-    if(user.is_society):
+    if user.is_society:
         account_form = SocietyForm(instance=society)
         return render(request, "eventsoc/account.html", {'account_form': account_form})
     else:
         account_form = UserForm(instance=user)
         return render(request, "eventsoc/account.html", {'account_form': account_form})
+
 
 @user_passes_test(lambda u: u.is_society, login_url='index')
 def society(request):
@@ -178,7 +181,7 @@ def society(request):
     return render(request, "eventsoc/society.html", {'form': form})
 
 
-#@login_required
+# @login_required
 def past_events(request):
     return render(request, "eventsoc/past_events.html", {})
 

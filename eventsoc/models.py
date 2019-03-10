@@ -1,5 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User, AbstractUser
+from django.template.defaultfilters import slugify
+from django.utils import timezone
+
 
 class NewUser(AbstractUser):
     is_user = models.BooleanField('student status', default=False)
@@ -11,6 +14,7 @@ class NewUser(AbstractUser):
     #     ('is_user', "" )
     #     )
 
+
 class Place(models.Model):
     place_name = models.CharField(max_length=50)
     room = models.CharField(max_length=10)
@@ -19,6 +23,7 @@ class Place(models.Model):
 
     def __str__(self):
         return self.place_name
+
 
 class Category(models.Model):
     """
@@ -38,10 +43,10 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+
 class Society(models.Model):
     user = models.OneToOneField(NewUser, on_delete=models.CASCADE, related_name='society_user', default = 'null')
     logo = models.ImageField(upload_to='logos')
-
 
     # class Meta:
     #     permissions = (
@@ -50,6 +55,7 @@ class Society(models.Model):
 
     def __str__(self):
         return self.user.username
+
 
 class Event(models.Model):
     # category = models.ForeignKey(Category, on_delete=models.CASCADE)
@@ -71,9 +77,7 @@ class Event(models.Model):
         return self.title
 
     def is_past(self):
-        if timezone.now() > self.event_date:
-            return True
-        return False
+        return timezone.now() > self.event_date  # TODO test it's the right import
 
 
 class Booking(models.Model):
@@ -81,7 +85,9 @@ class Booking(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='event_booking')
     society = models.ForeignKey(Society, on_delete=models.CASCADE, related_name='society_booking')
 
+
 class Bookmark(models.Model):
     user = models.ForeignKey(NewUser, on_delete=models.CASCADE, related_name='user_bookmarked')
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='event_bookmarked')
     society = models.ForeignKey(Society, on_delete=models.CASCADE, related_name='society_bookmarked')
+
