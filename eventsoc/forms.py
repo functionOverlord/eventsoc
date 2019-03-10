@@ -26,6 +26,7 @@ class EventForm(forms.ModelForm):
         fields = ('title', 'category', 'date', 'time', 'place_name', 'room', 'address', 'price', 'description', 'capacity', 'picture')
 
 
+
 # Probably won't be needed, currently isn't used
 class EditEventForm(forms.ModelForm):
     title = forms.CharField(required=True)
@@ -74,7 +75,7 @@ class UserForm(UserCreationForm):
         password2 = self.cleaned_data.get("password2")
 
         if not self.validate_password_strength():
-            raise forms.ValidationError('Password must contain at least 1 digit and letter.')  
+            raise forms.ValidationError('Password must contain at least 1 digit and letter.')
         return password2
 
     def validate_password_strength(self):
@@ -130,7 +131,7 @@ class SocietyForm(UserCreationForm):
         password2 = self.cleaned_data.get("password2")
 
         if not self.validate_password_strength():
-            raise forms.ValidationError('Password must contain at least 1 digit and letter.')  
+            raise forms.ValidationError('Password must contain at least 1 digit and letter.')
         return password2
 
     def validate_password_strength(self):

@@ -6,7 +6,6 @@ from eventsoc.forms import UserForm, SocietyForm, EditEventForm, EventForm
 from eventsoc.models import Society, Event, UserProfile
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
-from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
 from django.shortcuts import redirect
 
 
@@ -32,7 +31,7 @@ def user_login(request):
             else:
                 return HttpResponse("account disabled")
         else:
-            return HttpResponse("Invalid login details")
+            return (HttpResponse("Invalid login details"))
             print("Invalid login details:{0}, {1}".format(username, password))
 
         soc_username = request.POST.get('username')
@@ -69,22 +68,6 @@ def create_event(request):
             print(event_form.errors)
     return render(request, 'eventsoc/create_event.html', {'event_form': event_form})
 
-
-@user_passes_test(lambda u: u.is_society, login_url='index')
-class EventCreateView(CreateView):
-    form_class = EventForm
-    template_name = 'eventsoc/create_event.html'
-    
-    def get_context_data(self, **kwargs):
-        context = super(EventCreateView, self).get_context_data(**kwargs)
-        context['heading'] = 'New Event'
-        context['title'] = 'Events'
-        return context
-
-    def form_valid(self, form):
-        form.instance.user = self.request.user
-        return super(EventCreateView, self).form_valid(form)
-    
 
 def register(request):
     registered = False
@@ -132,7 +115,7 @@ def edit_event(request):
     # else:
     #     return(HttpResponse("Not logged in"))
 
-    if request.user.is_authenticated: # and society.is_society:
+    if request.user.is_authenticated:  # and society.is_society:
         # request.method returns get all the time
         if request.method == 'POST':
             society = request.user

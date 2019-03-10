@@ -46,6 +46,7 @@ class Category(models.Model):
         super(Category, self).save(*args, **kwargs)
 
 
+
 class Event(models.Model):
     title = models.CharField(max_length=100, unique=True)
     creator = models.ForeignKey(Society, on_delete=models.CASCADE, null=True)
@@ -64,7 +65,7 @@ class Event(models.Model):
         return self.title
 
     def is_past(self):
-        return timezone.now() > self.event_date # TODO test it's the right import
+        return timezone.now() > self.event_date  # TODO test it's the right import
 
 
 class Booking(models.Model):
@@ -77,3 +78,4 @@ class Bookmark(models.Model):
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='user_bookmarked')
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='event_bookmarked')
     society = models.ForeignKey(Society, on_delete=models.CASCADE, related_name='society_bookmarked')
+
