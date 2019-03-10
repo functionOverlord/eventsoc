@@ -16,7 +16,7 @@ class UserProfile(AbstractUser):
 
 
 class Society(models.Model):
-    user = models.OneToOneField(UserProfile, on_delete=models.CASCADE, related_name='society_user', default = 'null')
+    user = models.OneToOneField(UserProfile, on_delete=models.CASCADE, related_name='society_user', default='null')
     logo = models.ImageField(upload_to='logos')
 
     # class Meta:
@@ -46,13 +46,11 @@ class Category(models.Model):
         super(Category, self).save(*args, **kwargs)
 
 
-
 class Event(models.Model):
     title = models.CharField(max_length=100, unique=True)
     creator = models.ForeignKey(Society, on_delete=models.CASCADE, null=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    date = models.DateTimeField(help_text="Please use the format: YYYY-MM-DD")
-    time = models.TimeField(help_text='Please use the format: <em>HH:MM:SS<em')
+    date = models.DateTimeField(help_text="Please use the format: YYYY-MM-DD HH:MM:SS")
     price = models.IntegerField(blank=True, null=True)
     description = models.CharField(max_length=10000)
     picture = models.ImageField(upload_to='events')
@@ -60,12 +58,13 @@ class Event(models.Model):
     room = models.CharField(max_length=10)
     address = models.CharField(max_length=50, blank=True)
     capacity = models.IntegerField(blank=True, null=True)
+    popularity = models.IntegerField(blank=True, null=True, editable=False)
 
     def __unicode__(self):
         return self.title
 
     def is_past(self):
-        return timezone.now() > self.event_date  # TODO test it's the right import
+        return timezone.now() > self.date  # TODO test it's the right import
 
 
 class Booking(models.Model):

@@ -13,9 +13,8 @@ from django.shortcuts import redirect
 
 
 def index(request):
-    # Possibly swap capacity for popularity
-    event_list = Event.objects.order_by('-capacity')[:3]
-    return render(request, "eventsoc/index.html", {'event_list': event_list})
+    trending_events = Event.objects.order_by('-popularity')[:3]
+    return render(request, "eventsoc/index.html", {'trending_events': trending_events})
 
 
 def user_login(request):
