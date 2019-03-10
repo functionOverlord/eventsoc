@@ -37,7 +37,6 @@ class EditEventForm(forms.ModelForm):
     room = forms.CharField(max_length=10)
     address = forms.CharField(max_length=50)
     price = forms.IntegerField(required=True, initial=0)
-    price = forms.IntegerField(required=True, initial=0)
     description = forms.CharField(required=True, max_length=10000)
     picture = forms.ImageField()
 
@@ -73,6 +72,9 @@ class UserForm(UserCreationForm):
     def clean_password2(self):
         password1 = self.cleaned_data.get("password1")
         password2 = self.cleaned_data.get("password2")
+
+        if password1 and password2 and password1 != password2:
+            raise forms.ValidationError("Password has to match")
 
         if not self.validate_password_strength():
             raise forms.ValidationError('Password must contain at least 1 digit and letter.')
@@ -129,6 +131,9 @@ class SocietyForm(UserCreationForm):
     def clean_password2(self):
         password1 = self.cleaned_data.get("password1")
         password2 = self.cleaned_data.get("password2")
+
+        if password1 and password2 and password1 != password2:
+            raise forms.ValidationError("Password has to match")
 
         if not self.validate_password_strength():
             raise forms.ValidationError('Password must contain at least 1 digit and letter.')
