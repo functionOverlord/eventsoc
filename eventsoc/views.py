@@ -160,7 +160,8 @@ def edit_profile(request):
 
 # @login_required
 def booked(request):
-    return render(request, "eventsoc/booked.html", {})
+    upcoming_events = Event.objects.order_by('date')
+    return render(request, "eventsoc/booked.html", {'upcoming_events': upcoming_events})
 
 
 # @login_required
@@ -184,7 +185,8 @@ def society(request):
 
 # @login_required
 def past_events(request):
-    return render(request, "eventsoc/past_events.html", {})
+    upcoming_events = Event.objects.order_by('date')
+    return render(request, "eventsoc/past_events.html", {'upcoming_events': upcoming_events})
 
 
 @login_required

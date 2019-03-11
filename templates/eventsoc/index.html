@@ -40,19 +40,6 @@
 
 <hr class="my-4">
 
-<div class="container-fluid">
-    <div class="row">
-        {% for event in upcoming_events %}
-            <div class="card-deck col-md-4">
-                <div class="card" onclick="location.href='events/{{ event.pk }}'">
-                    <img class="card-img-top" src="{{ MEDIA_URL }}{{ event.picture }}" alt="...">
-                    <div class="card-body">
-                        <h4 class="card-title">{{ event.title }}</h4>
-                        <p class="card-text">Some description of event</p>
-                    </div>
-                </div>
-            </div>
-        {% endfor %}
-    </div>
-</div>
+{% include 'eventsoc/_event_cards.html' %}
+
 {% endblock %}
