@@ -6,5 +6,10 @@
 {% endblock %}
 
 {% block body_block %}
-    edit event
+<h2>Edit Event</h2>
+<form id="event_form" method="post" action="{% url 'edit_event' %}">
+  {% csrf_token %}
+  {{ event_form.as_p }}
+  <input type="submit" class="btn btn-default" name="edit_event" value="Create"/>
+</form>
 {% endblock %}

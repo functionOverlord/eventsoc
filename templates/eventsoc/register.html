@@ -6,5 +6,27 @@
 {% endblock %}
 
 {% block body_block %}
-    register
+{% if registered %}
+  Thank you for registering!
+  <a href="{% url 'index' %}">Return to homepage</a>
+{% else %}
+<div class="card-deck">
+  <div class="card" >
+    <h2>User Registration</h2>
+      <form id="user_form" method="post" action="{% url 'register' %}" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ user_form.as_p }}
+      <input type="submit" class="btn btn-primary" name="user_register" value="Create User"/>
+    </form>
+  </div>
+  <div class="card">
+    <h2>Society Registration</h2>
+    <form id="society_form" method="post" action="{% url 'register' %}"  enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ society_form.as_p }}
+      <input type="submit" class="btn btn-primary" name="society_register" value="Create Society"/>
+    </form>
+  </div>
+</div>
+{% endif %}
 {% endblock %}

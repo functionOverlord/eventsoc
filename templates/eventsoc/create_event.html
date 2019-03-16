@@ -6,5 +6,15 @@
 {% endblock %}
 
 {% block body_block %}
-    create event
+        <div class="container col-md-3 col-sm-6">
+            <h1>Create Event</h1>
+            <!-- All the data captured within this form is sent to the URL
+             as a HTTP POST request-->
+            <form id="event_form" method="post" action="{% url 'create_event' %}" enctype="multipart/form-data">
+                <!-- This tad provides protection against csrf -->
+                {% csrf_token %}
+                {{ event_form.as_p }}}
+                <input type="submit" name="submit" value="Create event"/>
+            </form>
+        </div>
 {% endblock %}
