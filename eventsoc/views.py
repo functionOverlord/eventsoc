@@ -82,7 +82,7 @@ def register(request):
                 user.save()
                 registered = True
                 login(request, user)
-            elif not user_form.is_valid():
+            else:
                 print(user_form.errors)
 
         elif 'society_register' in request.POST:
@@ -92,7 +92,7 @@ def register(request):
                 society.save()
                 registered = True
                 login(request, society)
-            elif not society_form.is_valid:
+            else:
                 print(society_form.errors)
     else:
         user_form = UserForm()
@@ -124,8 +124,8 @@ def edit_event(request):
             # instance should be an event
             # form = EditEventForm(request.POST, instance=event_form)
             event_form = EventForm(request.POST)
-            if form.is_valid:
-                update = form.save()
+            if event_form.is_valid:
+                update = event_form.save()
                 update.society = society
                 update.save()
         else:
