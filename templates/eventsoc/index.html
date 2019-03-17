@@ -2,33 +2,30 @@
 {% load staticfiles %}
 
 {% block title_block %}
-    Index
+    Home
 {% endblock %}
 
 {% block body_block %}
-
 <!-- TODO IMAGES SHOULD BE OF THE SAME SIZE-->
 <div id="carousel_slides" class="carousel slide" data-ride="carousel" data-pause="hover">
     <ol class="carousel-indicators">
-        <li data-target="#carousel_slides" data-slide-to="0" class="active"></li>
-        <li data-target="#carousel_slides" data-slide-to="1"></li>
+        {% for event in trending_events %}
+        <li data-target="#carousel_slides" data-slide-to="{{ forloop.counter }}" {% if forloop.first %}class="active"{% endif %} }}></li>
+        {% endfor %}
     </ol>
     <div class="carousel-inner">
-        <div class="carousel-item active">
-            <img src="{{MEDIA_URL}}event1.jpg" class="d-block w-100" alt="event1">
-        </div>
-        <div class="carousel-item">
-            <img src="{{MEDIA_URL}}event2.jpg" class="d-block w-100" alt="event2">
+        {% for event in trending_events %}
+            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+            {% comment %} TODO alt? {% endcomment %}
+            <img src="{{MEDIA_URL}}{{ event.picture }}" class="d-block w-100" alt="event1">
             <div class="carousel-caption d-none d-md-block">
-                <h2>Second slide label</h2>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                {{ event.title }}
                 <!-- TODO REPLACE WITH EVENT HREF -->
-                <button type="button" class="btn btn-outline-secondary btn-lg" onclick="location.href='/booked'">Go to event</button>
+                <button type="button" class="btn btn-primary btn-lg" onclick="location.href='events/{{ event.pk }}'">Go to event</button>
             </div>
         </div>
+        {% endfor %}
     </div>
-
-    <hr class="my-4">
 
     <a class="carousel-control-prev" href="#carousel_slides" role="button" data-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -39,4 +36,9 @@
         <span class="sr-only">Next</span>
     </a>
 </div>
+
+<hr class="my-4">
+
+{% include 'eventsoc/_event_cards.html' %}
+
 {% endblock %}

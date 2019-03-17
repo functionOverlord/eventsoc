@@ -15,7 +15,7 @@ class UserProfile(AbstractUser):
 
 
 class Society(models.Model):
-    user = models.OneToOneField(UserProfile, on_delete=models.CASCADE, related_name='society_user', default = 'null')
+    user = models.OneToOneField(UserProfile, on_delete=models.CASCADE, related_name='society_user', default='null')
     logo = models.ImageField(upload_to='logos')
 
     # class Meta:
@@ -69,7 +69,7 @@ class Event(models.Model):
         super(Event, self).save(*args, **kwargs)
 
     def is_past(self):
-        return timezone.now() > self.event_date  # TODO test it's the right import
+        return timezone.now() > self.date  # TODO test it's the right import
 
 
 class Booking(models.Model):
