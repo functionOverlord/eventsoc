@@ -2,14 +2,11 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import user_passes_test, login_required
-from eventsoc.forms import UserForm, SocietyForm, EditEventForm, EventForm
+from eventsoc.forms import StudentForm, SocietyForm, EditEventForm, EventForm
 from eventsoc.models import Society, Event, UserProfile
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.shortcuts import redirect
-
-
-# Create your views here.
 
 
 def index(request):
@@ -33,18 +30,6 @@ def user_login(request):
                 return HttpResponse("account disabled")
         else:
             return HttpResponse("Invalid login details")
-            print("Invalid login details:{0}, {1}".format(username, password))
-
-        soc_username = request.POST.get('username')
-        soc_password = request.POST.get('password')
-        society = authenticate(username=soc_username, password=soc_password)
-        if society:
-            if society.is_active:
-                login(request, society)
-                return HttpResponseRedirect(reverse('eventsoc/index.html'))
-            else:
-                return HttpResponse("Invalid login details")
-        else:
             print("Invalid login details:{0}, {1}".format(username, password))
     else:
         return render(request, 'eventsoc/login.html', {})
@@ -73,7 +58,7 @@ def create_event(request):
 def register(request):
     registered = False
     if request.method == 'POST':
-        user_form = UserForm(data=request.POST)
+        user_form = StudentForm(data=request.POST)
         society_form = SocietyForm(data=request.POST)
         if 'user_register' in request.POST:
             if user_form.is_valid():
@@ -95,7 +80,7 @@ def register(request):
             else:
                 print(society_form.errors)
     else:
-        user_form = UserForm()
+        user_form = StudentForm()
         society_form = SocietyForm()
     return render(request, 'eventsoc/register.html',
                   {'user_form': user_form,
@@ -140,11 +125,11 @@ def edit_event(request):
 def edit_profile(request):
     user = UserProfile.objects.get(id=request.user.id)
     # user_form = user.event
-    form = UserForm(instance=user)
+    form = StudentForm(instance=user)
 
     if request.user.is_authenticated and request.user.is_user:
         if request.method == 'POST':
-            form = UserForm(request.POST, instance=user)
+            form = StudentForm(request.POST, instance=user)
 
             if form.is_valid:
                 update = form.save()
@@ -154,7 +139,7 @@ def edit_profile(request):
                 update_session_auth_hash(request, user)
                 login(request, user)
     else:
-        form = UserForm(instance=user)
+        form = StudentForm(instance=user)
     return render(request, 'eventsoc/edit_profile.html', {'form': form})
 
 
@@ -172,7 +157,7 @@ def account(request):
         account_form = SocietyForm(instance=society)
         return render(request, "eventsoc/account.html", {'account_form': account_form})
     else:
-        account_form = UserForm(instance=user)
+        account_form = StudentForm(instance=user)
         return render(request, "eventsoc/account.html", {'account_form': account_form})
 
 
