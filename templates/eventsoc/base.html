@@ -45,10 +45,16 @@
 
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                   {% if user.is_authenticated %}
-                  <ul class="navbar-nav">
-                      <li class="nav-link"><a class="nav-link" href="/booked">Booked Events</a></li>
-                      <li class="nav-link"><a class="nav-link" href="#">Bookmarked events</a></li>
-                  </ul>
+                    {% if user.is_user %}
+                    <ul class="navbar-nav">
+                        <li class="nav-link"><a class="nav-link" href="/booked">Booked Events</a></li>
+                        <li class="nav-link"><a class="nav-link" href="#">Bookmarked events</a></li>
+                    </ul>
+                    {% else %}
+                    <ul class="navbar-nav">
+                        <li class="nav-link"><a class="nav-link" href="/create_event">Create Events</a></li>
+                    </ul>
+                    {% endif %}
                   {% endif %}
                   {#                TODO DOUBLE CHECK THE USE OF HREF -> USE {% URL 'PAGE-NAME' %} INSTEAD?#}
                   {% if user.is_authenticated %}

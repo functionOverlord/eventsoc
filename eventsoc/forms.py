@@ -8,41 +8,16 @@ from django.contrib.auth.forms import UserCreationForm
 
 
 class EventForm(forms.ModelForm):
-    title = forms.CharField(required=True)
-    category = ModelChoiceField(required=True, queryset=Category.objects.all())
-    date = forms.DateTimeField(required=True, help_text="Please use the format: YYYY-MM-DD")
-    time = forms.TimeField(required=True, help_text='Please use the format: <em>HH:MM:SS<em')
-    place_name = forms.CharField(max_length=50)
-    room = forms.CharField(max_length=10)
-    address = forms.CharField(max_length=50)
-    price = forms.IntegerField(required=True, initial=0)
-    description = forms.CharField(required=True, max_length=10000)
-    capacity = forms.IntegerField(required=True, initial=0)
-    picture = forms.ImageField()
-
     class Meta:
         model = Event
-        exclude = ('creator',)
-        fields = ('title', 'category', 'date', 'time', 'place_name', 'room', 'address', 'price', 'description', 'capacity', 'picture')
-
+        exclude = ('creator', 'slug', 'popularity')
 
 
 # Probably won't be needed, currently isn't used
 class EditEventForm(forms.ModelForm):
-    title = forms.CharField(required=True)
-    category = ModelChoiceField(required=True, queryset=Category.objects.all())
-    event_date = forms.DateTimeField(required=True, help_text="Please use the format: YYYY-MM-DD")
-    time = forms.TimeField(required=True, help_text='Please use the format: <em>HH:MM:SS<em')
-    place_name = forms.CharField(max_length=50)
-    room = forms.CharField(max_length=10)
-    address = forms.CharField(max_length=50)
-    price = forms.IntegerField(required=True, initial=0)
-    description = forms.CharField(required=True, max_length=10000)
-    picture = forms.ImageField()
-
     class Meta:
         model = Event
-        fields = ('title', 'category', 'event_date', 'time', 'place_name', 'room', 'address', 'price', 'description', 'picture')
+        exclude = ('creator', 'slug', 'popularity')
 
 
 # class EditProfile(forms.ModelForm):
@@ -52,9 +27,7 @@ class EditEventForm(forms.ModelForm):
     #     fields = ('username', 'password', 'email')
 
 
-class UserForm(UserCreationForm):
-    email = forms.EmailField(max_length=254, required=True, help_text='Required. Inform a valid email address.')
-
+class StudentForm(UserCreationForm):
     class Meta:
         model = UserProfile
         fields = ('username', 'password1', 'password2', 'email')
@@ -111,7 +84,6 @@ class UserForm(UserCreationForm):
 
 
 class SocietyForm(UserCreationForm):
-    email = forms.EmailField(max_length=254, required=True, help_text='Required. Inform a valid email address.')
     logo = forms.ImageField(required=False)
 
     class Meta:

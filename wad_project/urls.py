@@ -18,6 +18,7 @@ from django.urls import path
 from eventsoc import views
 from django.conf import settings
 from django.conf.urls.static import static
+from django.conf.urls import url
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,11 +27,12 @@ urlpatterns = [
     path('create_event/', views.create_event, name='Event_add'),
     path('eventsoc/create_event/', views.create_event, name='create_event'),
     path('register/', views.register, name='register'),
-    path('edit_event/', views.edit_event, name='edit_event'),
+    path('edit_event/<slug:slug>/', views.edit_event, name='edit_event'),
     path('edit_profile/', views.edit_profile, name='edit_profile'),
     path('booked/', views.booked, name='views'),
     path('account/', views.account, name='account'),
     path('society/', views.society, name='society'),
     path('past_events/', views.past_events, name='past_events'),
     path('user_logout/', views.user_logout, name='user_logout'),
+    url(r'^(?P<category_name_slug>[\w\-]+)/$', views.show_category, name='show_category'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
