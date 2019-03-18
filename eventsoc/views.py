@@ -96,7 +96,6 @@ def edit_event(request, slug):
     society = UserProfile.objects.get(id=request.user.id)
     event = Event.objects.get(slug=slug)
     event_form = EventForm(instance=event)
-
     if request.user.is_authenticated:
         if request.method == 'POST':
             event_form = EventForm(request.POST, request.FILES, instance=event)
@@ -115,9 +114,7 @@ def edit_event(request, slug):
 @user_passes_test(lambda u: u.is_user, login_url='index')
 def edit_profile(request):
     user = UserProfile.objects.get(id=request.user.id)
-    # user_form = user.event
     form = StudentForm(instance=user)
-
     if request.user.is_authenticated and request.user.is_user:
         if request.method == 'POST':
             form = StudentForm(request.POST, instance=user)
