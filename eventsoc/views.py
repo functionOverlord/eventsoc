@@ -35,7 +35,8 @@ def user_login(request):
         return render(request, 'eventsoc/login.html', {})
 
 
-def event(request):
+def event(request, slug):
+
     return render(request, 'event')
 
 
@@ -45,7 +46,9 @@ def create_event(request):
     if request.method == 'POST':
         event_form = EventForm(request.POST, request.FILES)
         if event_form.is_valid():
-            event_form.save(commit=True)
+            event = event_form.save(commit=True)
+            event.creator = request.user
+            event.save()
             # Need to create a slug event url to direct user to the event page they've created
             # redirect = 'eventsoc/'
             # return index(request)
@@ -88,36 +91,24 @@ def register(request):
                    'registered': registered})
 
 
-# @login_required
-# @permission_required(eventsoc.is_society)
-# User needs to select an event
 @user_passes_test(lambda u: u.is_society, login_url='index')
-def edit_event(request):
-    # society = User.objects.get(id=request.user.id)
-    # event_form = EventForm()
-    # form = EditEventForm(instance=event_form)
-    # if request.user.is_authenticated:
-    #     society = request.user
-    # else:
-    #     return(HttpResponse("Not logged in"))
+def edit_event(request, slug):
+    society = UserProfile.objects.get(id=request.user.id)
+    event = Event.objects.get(slug=slug)
+    event_form = EventForm(instance=event)
 
-    if request.user.is_authenticated:  # and society.is_society:
-        # request.method returns get all the time
+    if request.user.is_authenticated:
         if request.method == 'POST':
-            society = request.user
-            events = Event.objects.get(creator=society.creator)
-            # instance should be an event
-            # form = EditEventForm(request.POST, instance=event_form)
-            event_form = EventForm(request.POST)
+            event_form = EventForm(request.POST, request.FILES, instance=event)
             if event_form.is_valid:
                 update = event_form.save()
                 update.society = society
                 update.save()
         else:
-            return HttpResponse("No input, request method = " + request.method)
+            events = []
     else:
-        return HttpResponse("Not a society")
-    return render(request, 'eventsoc/edit_event.html', {'event_form': event_form, 'events': events})
+        events = []
+    return render(request, 'eventsoc/edit_event.html', {'event_form': event_form, 'event': event, 'slug': slug})
 
 
 # @login_required
@@ -143,19 +134,19 @@ def edit_profile(request):
     return render(request, 'eventsoc/edit_profile.html', {'form': form})
 
 
-# @login_required
+@user_passes_test(lambda u: u.is_user, login_url='index')
 def booked(request):
     upcoming_events = Event.objects.order_by('date')
     return render(request, "eventsoc/booked.html", {'upcoming_events': upcoming_events})
 
 
-# @login_required
-# @user_passes_test(lambda u: u.is_user, login_url='index')
+@login_required
 def account(request):
     user = UserProfile.objects.get(id=request.user.id)
     if user.is_society:
-        account_form = SocietyForm(instance=society)
-        return render(request, "eventsoc/account.html", {'account_form': account_form})
+        account_form = SocietyForm(instance=user)
+        events = Event.objects.filter(creator=user)
+        return render(request, "eventsoc/account.html", {'account_form': account_form, 'events': events})
     else:
         account_form = StudentForm(instance=user)
         return render(request, "eventsoc/account.html", {'account_form': account_form})

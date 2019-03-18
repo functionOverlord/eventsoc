@@ -47,7 +47,7 @@ class Category(models.Model):
 
 class Event(models.Model):
     title = models.CharField(max_length=100, unique=True)
-    creator = models.ForeignKey(Society, on_delete=models.CASCADE, null=True)
+    creator = models.ForeignKey(UserProfile, on_delete=models.CASCADE, null=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     description = models.CharField(max_length=10000)
     date = models.DateTimeField(help_text="Please use the format: YYYY-MM-DD HH:MM:SS", null=True)
@@ -81,4 +81,3 @@ class Booking(models.Model):
 class Bookmark(models.Model):
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='user_bookmarked')
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='event_bookmarked')
-
