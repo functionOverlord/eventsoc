@@ -10,14 +10,14 @@ from django.contrib.auth.forms import UserCreationForm
 class EventForm(forms.ModelForm):
     class Meta:
         model = Event
-        exclude = ('creator', 'slug')
+        exclude = ('creator', 'slug', 'popularity')
 
 
 # Probably won't be needed, currently isn't used
 class EditEventForm(forms.ModelForm):
     class Meta:
         model = Event
-        exclude = ('creator', 'slug')
+        exclude = ('creator', 'slug', 'popularity')
 
 
 # class EditProfile(forms.ModelForm):

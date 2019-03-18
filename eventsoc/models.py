@@ -56,6 +56,7 @@ class Event(models.Model):
     price = models.IntegerField(blank=True, null=True)
     capacity = models.IntegerField(blank=True, null=True)
     picture = models.ImageField(upload_to='events')
+    popularity = models.IntegerField(blank=True, null=True, editable=False)
     slug = models.SlugField(max_length=40, unique=True)
 
     def __str__(self):
