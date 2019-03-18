@@ -18,6 +18,7 @@ from django.urls import path
 from eventsoc import views
 from django.conf import settings
 from django.conf.urls.static import static
+from django.conf.urls import url
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -33,4 +34,5 @@ urlpatterns = [
     path('society/', views.society, name='society'),
     path('past_events/', views.past_events, name='past_events'),
     path('user_logout/', views.user_logout, name='user_logout'),
+    url(r'^(?P<category_name_slug>[\w\-]+)/$', views.show_category, name='show_category'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import user_passes_test, login_required
 from eventsoc.forms import StudentForm, SocietyForm, EditEventForm, EventForm
-from eventsoc.models import Society, Event, UserProfile
+from eventsoc.models import Society, Event, UserProfile, Category
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.shortcuts import redirect
@@ -108,6 +108,37 @@ def edit_event(request, slug):
     else:
         events = []
     return render(request, 'eventsoc/edit_event.html', {'event_form': event_form, 'event': event, 'slug': slug})
+
+
+def show_category(request, category_name_slug):
+    # Create a context dictionary which we can pass to the template rendering engine
+    context_dict = {}
+    
+    try:
+        # Find category name slug with the given name
+        category = Category.objects.get(slug=category_name_slug)
+
+        # Retrieve all associated events.
+        # filter() will return a list of event object or an empty list.
+        upcoming_events = Event.objects.filter(category=category).order_by('date')
+
+        # Retrieve popular events in the category
+        trending_events = Event.objects.filter(category=category).order_by('-popularity')[:5]  # TODO correct sorting order?
+
+        context_dict['trending_events'] = trending_events
+        context_dict['upcoming_events'] = upcoming_events
+
+        # Also add the category object from the database to the context_dictionary
+        # Use this in the template to verify that the category exists
+        context_dict['category'] = category
+
+    except Category.DoesNotExist:
+        # Got here if we didn't find the specified category
+        context_dict['category'] = None
+        context_dict['upcoming_events'] = None
+    
+    # Go render the response and return it to the client
+    return render(request, "eventsoc/index.html", context_dict)
 
 
 # @login_required
