@@ -1,13 +1,14 @@
 from django.shortcuts import render
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponseForbidden
 from django.urls import reverse
 from django.contrib.auth.decorators import user_passes_test, login_required
 from eventsoc.forms import StudentForm, SocietyForm, EditEventForm, EventForm
 from eventsoc.models import Society, Event, UserProfile, Category
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib import messages
+from django.views.generic.edit import DeleteView
 
 
 def index(request):
@@ -111,6 +112,18 @@ def edit_event(request, slug):
     else:
         events = []
     return render(request, 'eventsoc/edit_event.html', {'event_form': event_form, 'event': event, 'slug': slug})
+
+
+@user_passes_test(lambda u: u.is_society, login_url='index')
+def delete_event(request, slug):
+    event = get_object_or_404(Event, slug=slug)
+    creator = request.user
+    if request.method == 'GET':
+        if event.creator == creator:
+            event.delete()
+            return redirect('/')
+
+    return render(request, 'eventsoc/delete_event.html', {"event": event})
 
 
 def show_category(request, category_name_slug):
