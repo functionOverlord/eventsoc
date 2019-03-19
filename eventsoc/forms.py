@@ -29,6 +29,7 @@ class EditEventForm(forms.ModelForm):
 
 class StudentForm(UserCreationForm):
     class Meta:
+        # Model should be society but this causes problems with fields
         model = UserProfile
         fields = ('username', 'password1', 'password2', 'email')
 

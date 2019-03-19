@@ -40,8 +40,8 @@ def user_login(request):
 
 
 def event(request, slug):
-
-    return render(request, 'event')
+    event = Event.objects.get(slug=slug)
+    return render(request, 'eventsoc/event.html', {'slug': slug, 'event': event})
 
 
 @user_passes_test(lambda u: u.is_society, login_url='index')
@@ -188,12 +188,11 @@ def booked(request):
 def account(request):
     user = UserProfile.objects.get(id=request.user.id)
     if user.is_society:
-        account_form = SocietyForm(instance=user)
+        # Need to pass the society's logo
         events = Event.objects.filter(creator=user)
-        return render(request, "eventsoc/account.html", {'account_form': account_form, 'events': events})
+        return render(request, "eventsoc/account.html", {'user': user, 'events': events})
     else:
-        account_form = StudentForm(instance=user)
-        return render(request, "eventsoc/account.html", {'account_form': account_form})
+        return render(request, "eventsoc/account.html", {'user': user})
 
 
 @user_passes_test(lambda u: u.is_society, login_url='index')

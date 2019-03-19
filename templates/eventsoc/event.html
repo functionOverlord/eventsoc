@@ -1,0 +1,21 @@
+{%  extends 'eventsoc/base.html' %}
+{% load staticfiles %}
+
+{% block title_block %}
+    Event
+{% endblock %}
+
+<!-- Displays all of the event information  -->
+<!-- Just to test view, Leo to display properly -->
+{% block body_block %}
+  <h2>{{ event.title }}</h2>
+  {{event.picture}}
+  {{event.category}}
+  Description: {{event.description}}
+  When: {{event.date}}
+  Where: {{event.address}}
+  <!-- Should display free if price is 0 -->
+  Price: {{event.price}}
+  <!-- Should be capacity - number of bookings  -->
+  Free space: {{event.capacity}}
+{% endblock %}

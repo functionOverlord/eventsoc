@@ -36,4 +36,5 @@ urlpatterns = [
     path('user_logout/', views.user_logout, name='user_logout'),
     url(r'^(?P<category_name_slug>[\w\-]+)/$', views.show_category, name='show_category'),
     url(r'^(?P<slug>[\w\-]+)/delete/$', views.delete_event, name='delete_event'),
+    path('event/<slug:slug>/', views.event, name='event'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

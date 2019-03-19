@@ -13,7 +13,7 @@ class UserProfile(AbstractUser):
     #     ('is_user', "" )
     #     )
 
-
+# Is never used, need to overhaul the user models
 class Society(models.Model):
     user = models.OneToOneField(UserProfile, on_delete=models.CASCADE, related_name='society_user', default='null')
     logo = models.ImageField(upload_to='logos')
@@ -46,6 +46,7 @@ class Category(models.Model):
 
 
 class Event(models.Model):
+    # Needs a number booked field
     title = models.CharField(max_length=100, unique=True)
     creator = models.ForeignKey(UserProfile, on_delete=models.CASCADE, null=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)

@@ -7,7 +7,7 @@
                 <div class="card">
 
                     <!-- TODO REPLACE WITH EVENT HREF -->
-                    <img class="card-img-top" src="{{ MEDIA_URL }}{{ event.picture }}" alt="..." onclick="location.href='events/{{ event.pk }}'">
+                    <img class="card-img-top" src="{{ MEDIA_URL }}{{ event.picture }}" alt="..." onclick="location.href='event/{{ event.slug }}'">
                     <div class="card-body">
                         <p class="card-text"><small class="text-muted">{{ event.date }}</small></p>
                         <h3 class="card-title" onclick="location.href='events/{{ event.pk }}'">{{ event.title }}</h3>
