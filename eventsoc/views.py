@@ -7,6 +7,7 @@ from eventsoc.models import Society, Event, UserProfile, Category
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.shortcuts import redirect
+from django.contrib import messages
 
 
 def index(request):
@@ -29,8 +30,10 @@ def user_login(request):
             else:
                 return HttpResponse("account disabled")
         else:
-            return HttpResponse("Invalid login details")
-            print("Invalid login details:{0}, {1}".format(username, password))
+            messages.add_message(request, messages.ERROR, "Incorrect user or password")
+            return HttpResponseRedirect(reverse( 'login' ))
+            #return HttpResponse("Invalid login details")
+            #print("Invalid login details:{0}, {1}".format(username, password))
     else:
         return render(request, 'eventsoc/login.html', {})
 
@@ -113,7 +116,7 @@ def edit_event(request, slug):
 def show_category(request, category_name_slug):
     # Create a context dictionary which we can pass to the template rendering engine
     context_dict = {}
-    
+
     try:
         # Find category name slug with the given name
         category = Category.objects.get(slug=category_name_slug)
@@ -136,7 +139,7 @@ def show_category(request, category_name_slug):
         # Got here if we didn't find the specified category
         context_dict['category'] = None
         context_dict['upcoming_events'] = None
-    
+
     # Go render the response and return it to the client
     return render(request, "eventsoc/index.html", context_dict)
 
