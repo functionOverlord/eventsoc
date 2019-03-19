@@ -13,7 +13,7 @@
             <form id="event_form" method="post" action="{% url 'create_event' %}" enctype="multipart/form-data">
                 <!-- This tad provides protection against csrf -->
                 {% csrf_token %}
-                {{ event_form.as_p }}}
+                {{ event_form.as_p }}
                 <input type="submit" name="submit" value="Create event"/>
             </form>
         </div>

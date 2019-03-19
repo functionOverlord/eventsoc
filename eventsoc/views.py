@@ -33,8 +33,6 @@ def user_login(request):
         else:
             messages.add_message(request, messages.ERROR, "Incorrect user or password")
             return HttpResponseRedirect(reverse( 'login' ))
-            #return HttpResponse("Invalid login details")
-            #print("Invalid login details:{0}, {1}".format(username, password))
     else:
         return render(request, 'eventsoc/login.html', {})
 
