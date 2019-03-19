@@ -35,7 +35,7 @@
   </div>
   {% if user.is_society %}
   <div class="tab-pane fade" id="events" role="tabpanel" aria-labelledby="events-tab">
-    <h2>Society's Events</h2>
+    <h2>{{user.username}}'s Events</h2>
       <div class="container-fluid">
           <div class="row">
               {% for event in events %}

@@ -2,7 +2,7 @@ import os
 os.environ.setdefault('DJANGO_SETTINGS_MODULE',
                       'wad_project.settings')
 
-import django 
+import django
 django.setup()
 from eventsoc.models import Category, Event
 
@@ -16,25 +16,25 @@ def populate():
     ]
 
     sports_health_events = [
-        {"title": "Volleyball Competition", "date": "2019-05-12 15:00:00", "room": "200", 
+        {"title": "Volleyball Competition", "date": "2019-05-12 15:00:00", "room": "200",
         "address": "Sports Centre", "price": 5, "description": "GU vs Strathclyde!", "capacity": 200,
         "picture": "events/volleyball.jpeg"},
-        {"title": "Yoga for Beginners", "date": "2019-03-12 18:30:00", "room": "Main hall", 
+        {"title": "Yoga for Beginners", "date": "2019-03-12 18:30:00", "room": "Main hall",
         "address": "Argyle St. 5", "price": 3, "description": "We're a yoga studio that likes to keep it real and experts at making you feel good.",
         "capacity": 15, "picture": "events/yoga.jpg"}
     ]
 
     games_events = [
-         {"title": "Monopoly Night", "date": "2019-04-15 19:15:00", "room": "407", 
+         {"title": "Monopoly Night", "date": "2019-04-15 19:15:00", "room": "407",
          "address": "Joseph Black Building", "price": 0, "description": "Come and become the monopolist haha.",
          "capacity": 16, "picture": "events/monopoly.jpg"}
     ]
 
     art_events = [
-        {"title": "Twin Peaks Painting Show", "date": "2019-03-25 13:00:00", "room": "Exibition Space 3", 
+        {"title": "Twin Peaks Painting Show", "date": "2019-03-25 13:00:00", "room": "Exibition Space 3",
         "address": "Hunterian Museum", "price": 0, "description": "The Owls are not what they seem.",
         "capacity": 40, "picture": "events/twin.jpg"},
-        {"title": "Bread in Daily Life. Photo Display.", "date": "2019-03-28 15:00:00", "room": "1st floor", 
+        {"title": "Bread in Daily Life. Photo Display.", "date": "2019-03-28 15:00:00", "room": "1st floor",
         "address": "GU Library", "price": 0, "description": "I like bread and I took some photos of it.",
         "capacity": 35, "picture": "events/bread.png"}
     ]
@@ -73,7 +73,7 @@ def populate():
             "Media and Films": {"events": media_films_events},
             "Party": {"events": party_events},
             "Art": {"events": art_events},
-            "Bussines and Economy": {"events": bussiness_economy_events},
+            "Business and Economy": {"events": bussiness_economy_events},
             "Education": {"events": educations_events},
             "Games": {"events": games_events},
             "Food and Drinks": {"events": food_drink_events},

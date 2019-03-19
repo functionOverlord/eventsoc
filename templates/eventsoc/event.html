@@ -8,14 +8,28 @@
 <!-- Displays all of the event information  -->
 <!-- Just to test view, Leo to display properly -->
 {% block body_block %}
-  <h2>{{ event.title }}</h2>
-  {{event.picture}}
-  {{event.category}}
-  Description: {{event.description}}
-  When: {{event.date}}
-  Where: {{event.address}}
+  <h1>{{ event.title }}</h1>
+  <div>
+    <img class="img-fluid" src="{{ MEDIA_URL }}{{ event.picture }}" alt="Event image"">
+  </div>
+  <p>
+    Category: {{event.category}}
+  </p>
+  <p>
+    Description: {{event.description}}
+  </p>
+  <p>
+    When: {{event.date}}
+  </p>
+  <p>
+    Where: {{event.address}}
+  </p>
   <!-- Should display free if price is 0 -->
-  Price: {{event.price}}
+  <p>
+    Price: {{event.price}}
+  </p>
   <!-- Should be capacity - number of bookings  -->
-  Free space: {{event.capacity}}
+  <p>
+    Free space: {{event.capacity}}
+  </p>
 {% endblock %}

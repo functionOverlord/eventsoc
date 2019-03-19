@@ -10,14 +10,15 @@
                     <img class="card-img-top" src="{{ MEDIA_URL }}{{ event.picture }}" alt="..." onclick="location.href='event/{{ event.slug }}'">
                     <div class="card-body">
                         <p class="card-text"><small class="text-muted">{{ event.date }}</small></p>
-                        <h3 class="card-title" onclick="location.href='events/{{ event.pk }}'">{{ event.title }}</h3>
+                        <h3 class="card-title" onclick="location.href='event/{{ event.slug }}'">{{ event.title }}</h3>
                         <p class="card-text">{{ event.place_name }}</p>
                         <p class="card-text"><small class="text-muted">{{ event.address }}</small></p>
                         <p class="card-text"><small class="text-muted">Price: {{ event.price }}</small></p>
-
+                        {% if user.is_user %}
                         <a href="#" class="float">
                             <i class="fa fa-heart my-float"></i>
                         </a>
+                          {% endif %}
                         <div class="label-container">
                             <div class="label-text">Bookmark</div>
                             <i class="fa fa-play label-arrow"></i>
