@@ -10,7 +10,7 @@
 <div id="carousel_slides" class="carousel slide" data-ride="carousel" data-pause="hover">
     <ol class="carousel-indicators">
         {% for event in trending_events %}
-        <li data-target="#carousel_slides" data-slide-to="{{ forloop.counter }}" {% if forloop.first %}class="active"{% endif %} }}></li>
+        <li data-target="#carousel_slides" data-slide-to="{{ forloop.counter }}" {% if forloop.first %}class="active"{% endif %}></li>
         {% endfor %}
     </ol>
     <div class="carousel-inner">

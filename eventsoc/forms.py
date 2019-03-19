@@ -51,7 +51,8 @@ class StudentForm(UserCreationForm):
             raise forms.ValidationError("Password has to match")
 
         if not self.validate_password_strength():
-            raise forms.ValidationError('Password must contain at least 1 digit and letter.')
+            raise forms.ValidationError(
+                'Password must contain at least 1 digit and letter.')
         return password2
 
     def validate_password_strength(self):
@@ -64,15 +65,18 @@ class StudentForm(UserCreationForm):
 
         # Check min value
         if len(value) < min_length:
-            raise forms.ValidationError('Password must be at least {0} characters long'.format(min_length))
+            raise forms.ValidationError(
+                'Password must be at least {0} characters long'.format(min_length))
 
         # Check if the password contains a digit
         if not any(char.isdigit() for char in value):
-            raise forms.ValidationError('Password must contain at least 1 digit')
+            raise forms.ValidationError(
+                'Password must contain at least 1 digit')
 
         # Check if the password contain a letter
         if not any(char.isalpha() for char in value):
-            raise forms.ValidationError('Password must contain at least 1 letter')
+            raise forms.ValidationError(
+                'Password must contain at least 1 letter')
 
         return True
 
@@ -109,7 +113,8 @@ class SocietyForm(UserCreationForm):
             raise forms.ValidationError("Password has to match")
 
         if not self.validate_password_strength():
-            raise forms.ValidationError('Password must contain at least 1 digit and letter.')
+            raise forms.ValidationError(
+                'Password must contain at least 1 digit and letter.')
         return password2
 
     def validate_password_strength(self):
@@ -122,15 +127,18 @@ class SocietyForm(UserCreationForm):
 
         # Check min value
         if len(value) < min_length:
-            raise forms.ValidationError('Password must be at least {0} characters long'.format(min_length))
+            raise forms.ValidationError(
+                'Password must be at least {0} characters long'.format(min_length))
 
         # Check if the password contains a digit
         if not any(char.isdigit() for char in value):
-            raise forms.ValidationError('Password must contain at least 1 digit')
+            raise forms.ValidationError(
+                'Password must contain at least 1 digit')
 
         # Check if the password contain a letter
         if not any(char.isalpha() for char in value):
-            raise forms.ValidationError('Password must contain at least 1 letter')
+            raise forms.ValidationError(
+                'Password must contain at least 1 letter')
 
         return True
 

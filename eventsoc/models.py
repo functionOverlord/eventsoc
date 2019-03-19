@@ -14,8 +14,14 @@ class UserProfile(AbstractUser):
     #     )
 
 # Is never used, need to overhaul the user models
+
+
 class Society(models.Model):
-    user = models.OneToOneField(UserProfile, on_delete=models.CASCADE, related_name='society_user', default='null')
+    user = models.OneToOneField(
+        UserProfile,
+        on_delete=models.CASCADE,
+        related_name='society_user',
+        default='null')
     logo = models.ImageField(upload_to='logos')
 
     # class Meta:
@@ -37,7 +43,7 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
-    #def get_absolute_url(self):
+    # def get_absolute_url(self):
     #    return "/categories/%s/" % self.slug
 
     def save(self, *args, **kwargs):
@@ -48,10 +54,15 @@ class Category(models.Model):
 class Event(models.Model):
     # Needs a number booked field
     title = models.CharField(max_length=100, unique=True)
-    creator = models.ForeignKey(UserProfile, on_delete=models.CASCADE, null=True)
+    creator = models.ForeignKey(
+        UserProfile,
+        on_delete=models.CASCADE,
+        null=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     description = models.CharField(max_length=10000)
-    date = models.DateTimeField(help_text="Please use the format: YYYY-MM-DD HH:MM:SS", null=True)
+    date = models.DateTimeField(
+        help_text="Please use the format: YYYY-MM-DD HH:MM:SS",
+        null=True)
     address = models.CharField(max_length=50, blank=True)
     room = models.CharField(max_length=25, blank=True, null=True)
     price = models.IntegerField(blank=True, null=True)
@@ -75,10 +86,22 @@ class Event(models.Model):
 
 
 class Booking(models.Model):
-    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='user_booking')
-    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='event_booking')
+    user = models.ForeignKey(
+        UserProfile,
+        on_delete=models.CASCADE,
+        related_name='user_booking')
+    event = models.ForeignKey(
+        Event,
+        on_delete=models.CASCADE,
+        related_name='event_booking')
 
 
 class Bookmark(models.Model):
-    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='user_bookmarked')
-    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='event_bookmarked')
+    user = models.ForeignKey(
+        UserProfile,
+        on_delete=models.CASCADE,
+        related_name='user_bookmarked')
+    event = models.ForeignKey(
+        Event,
+        on_delete=models.CASCADE,
+        related_name='event_bookmarked')
