@@ -1,3 +1,4 @@
+from django.core.validators import MaxValueValidator
 from django.db import models
 from django.contrib.auth.models import User, AbstractUser
 from django.template.defaultfilters import slugify
@@ -61,8 +62,8 @@ class Event(models.Model):
         null=True)
     address = models.CharField(max_length=50, blank=True)
     room = models.CharField(max_length=25, blank=True, null=True)
-    price = models.PositiveIntegerField(blank=True, null=True)
-    capacity = models.PositiveIntegerField(blank=True, null=True, default=0)
+    price = models.PositiveIntegerField(blank=True, null=True, default=0)
+    capacity = models.PositiveIntegerField(blank=True, null=True)
     bookings = models.PositiveIntegerField(blank=True, null=True, editable=False, default=0)
     picture = models.ImageField(upload_to='events')
     popularity = models.IntegerField(blank=True, null=True, editable=False)
@@ -77,6 +78,12 @@ class Event(models.Model):
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
         super(Event, self).save(*args, **kwargs)
+
+    def remaining_capacity(self):
+        return self.capacity - self.bookings
+
+    def is_fully_booked(self):
+        return self.remaining_capacity() < 1
 
     def is_past(self):
         return timezone.now() > self.date  # TODO test it's the right import
