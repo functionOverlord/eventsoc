@@ -37,5 +37,5 @@ urlpatterns = [
         views.show_category, name='show_category'),
     url(r'^(?P<slug>[\w\-]+)/delete/$',
         views.delete_event, name='delete_event'),
-    path('event/<slug:slug>/', views.event, name='event'),
+    path('event/<slug:slug>/', views.show_event, name='event'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

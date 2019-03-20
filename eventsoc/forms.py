@@ -3,6 +3,7 @@ from django.forms import ModelChoiceField
 from django.contrib.auth.models import User
 from eventsoc.models import UserProfile, Society, Event, Category
 from django.contrib.auth.forms import UserCreationForm
+import django.contrib.auth.password_validation as validators
 # May only need one of these event forms
 # Might not want to have queryset
 
@@ -29,13 +30,25 @@ class EditEventForm(forms.ModelForm):
 
 class StudentForm(UserCreationForm):
     class Meta:
-        # Model should be society but this causes problems with fields
         model = UserProfile
         fields = ('username', 'password1', 'password2', 'email')
 
+    def clean_password(self):
+        """
+        Check password's strength
+        :return: cleaned password
+        """
+        password1 = self.cleaned_data.get('password1')
+        try:
+            validators.validate_password(password1, self.instance)
+        except forms.ValidationError as error:
+            # Method inherited from BaseForm
+            self.add_error('password1', error)
+        return password1
+
     def clean_email(self):
         """
-        check email already exists
+        Check email already exists
         :return: cleaned email
         """
         email = self.cleaned_data.get('email', None)
@@ -43,47 +56,9 @@ class StudentForm(UserCreationForm):
             raise forms.ValidationError('That email is already in registered!')
         return email
 
-    def clean_password2(self):
-        password1 = self.cleaned_data.get("password1")
-        password2 = self.cleaned_data.get("password2")
-
-        if password1 and password2 and password1 != password2:
-            raise forms.ValidationError("Password has to match")
-
-        if not self.validate_password_strength():
-            raise forms.ValidationError(
-                'Password must contain at least 1 digit and letter.')
-        return password2
-
-    def validate_password_strength(self):
-        """
-        Validates that a password is at least 7 characters long and had
-        at least 1 digit and 1 letter
-        """
-        min_length = 8
-        value = self.cleaned_data['password1']
-
-        # Check min value
-        if len(value) < min_length:
-            raise forms.ValidationError(
-                'Password must be at least {0} characters long'.format(min_length))
-
-        # Check if the password contains a digit
-        if not any(char.isdigit() for char in value):
-            raise forms.ValidationError(
-                'Password must contain at least 1 digit')
-
-        # Check if the password contain a letter
-        if not any(char.isalpha() for char in value):
-            raise forms.ValidationError(
-                'Password must contain at least 1 letter')
-
-        return True
-
     def save(self, commit=True):
         user = super().save(commit=False)
         user.is_user = True
-        # THIS LINE!!!!!
         user.is_active = True
         if commit:
             user.save()
@@ -92,14 +67,29 @@ class StudentForm(UserCreationForm):
 
 class SocietyForm(UserCreationForm):
     logo = forms.ImageField(required=False)
+    society_name = forms.CharField(max_length=200, required=True)
+    social_media_website = forms.URLField()
 
     class Meta:
         model = UserProfile
-        fields = ('username', 'password1', 'password2', 'email', 'logo')
+        fields = ('username', 'society_name', 'social_media_website', 'password1', 'password2', 'email', 'logo')
+
+    def clean_password(self):
+        """
+        Check password's strength
+        :return: cleaned password
+        """
+        password1 = self.cleaned_data.get('password1')
+        try:
+            validators.validate_password(password1, self.instance)
+        except forms.ValidationError as error:
+            # Method inherited from BaseForm
+            self.add_error('password1', error)
+        return password1
 
     def clean_email(self):
         """
-        check email already exists
+        Check email already exists
         :return: cleaned email
         """
         email = self.cleaned_data.get('email', None)
@@ -107,50 +97,14 @@ class SocietyForm(UserCreationForm):
             raise forms.ValidationError('That email is already in registered!')
         return email
 
-    def clean_password2(self):
-        password1 = self.cleaned_data.get("password1")
-        password2 = self.cleaned_data.get("password2")
-
-        if password1 and password2 and password1 != password2:
-            raise forms.ValidationError("Password has to match")
-
-        if not self.validate_password_strength():
-            raise forms.ValidationError(
-                'Password must contain at least 1 digit and letter.')
-        return password2
-
-    def validate_password_strength(self):
-        """
-        Validates that a password is at least 7 characters long and had
-        at least 1 digit and 1 letter
-        """
-        min_length = 8
-        value = self.cleaned_data['password1']
-
-        # Check min value
-        if len(value) < min_length:
-            raise forms.ValidationError(
-                'Password must be at least {0} characters long'.format(min_length))
-
-        # Check if the password contains a digit
-        if not any(char.isdigit() for char in value):
-            raise forms.ValidationError(
-                'Password must contain at least 1 digit')
-
-        # Check if the password contain a letter
-        if not any(char.isalpha() for char in value):
-            raise forms.ValidationError(
-                'Password must contain at least 1 letter')
-
-        return True
-
     def save(self):
         user = super().save(commit=False)
-        # THIS LINE AGAIN!!!!
         user.is_active = True
         user.is_society = True
         user.save()
         society = Society.objects.create(user=user)
+        society.social_media_website = self.cleaned_data['social_media_website']
+        society.email = self.cleaned_data['society_name']
         society.email = self.cleaned_data['email']
         society.logo = self.cleaned_data.get('logo')
         return user
