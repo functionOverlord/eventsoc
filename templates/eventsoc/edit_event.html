@@ -8,7 +8,7 @@
 {% block body_block %}
 <h2>Edit Event</h2>
 {% if event %}
-  <form id="event_form" method="post" action="/edit_event/{{event.slug}}/" enctype="multipart/form-data">
+  <form id="event_form" method="post" action="{% url 'edit_event' event.slug %}" enctype="multipart/form-data">
     {% csrf_token %}
     {{ event_form.as_p }}
     <input type="submit" class="btn btn-default" name="edit_event" value="Save Changes"/>

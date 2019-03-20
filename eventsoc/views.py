@@ -1,19 +1,24 @@
 from django.shortcuts import render
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponseForbidden
 from django.urls import reverse
 from django.contrib.auth.decorators import user_passes_test, login_required
 from eventsoc.forms import StudentForm, SocietyForm, EditEventForm, EventForm
 from eventsoc.models import Society, Event, UserProfile, Category
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render, get_object_or_404
+from django.contrib import messages
+from django.views.generic.edit import DeleteView
 
 
 def index(request):
-    trending_events = Event.objects.order_by('-popularity')[:5]  # TODO correct sorting order?
+    trending_events = Event.objects.order_by(
+        '-popularity')[:5]  # TODO correct sorting order?
     upcoming_events = Event.objects.order_by('date')
-    return render(request, "eventsoc/index.html", {'trending_events': trending_events,
-                                                   'upcoming_events': upcoming_events})
+    return render(request,
+                  "eventsoc/index.html",
+                  {'trending_events': trending_events,
+                   'upcoming_events': upcoming_events})
 
 
 def user_login(request):
@@ -29,15 +34,19 @@ def user_login(request):
             else:
                 return HttpResponse("account disabled")
         else:
-            return HttpResponse("Invalid login details")
-            print("Invalid login details:{0}, {1}".format(username, password))
+            messages.add_message(
+                request,
+                messages.ERROR,
+                "Incorrect user or password")
+            return HttpResponseRedirect(reverse('login'))
     else:
         return render(request, 'eventsoc/login.html', {})
 
 
 def event(request, slug):
-
-    return render(request, 'event')
+    event = Event.objects.get(slug=slug)
+    return render(request, 'eventsoc/event.html',
+                  {'slug': slug, 'event': event})
 
 
 @user_passes_test(lambda u: u.is_society, login_url='index')
@@ -55,7 +64,8 @@ def create_event(request):
             return redirect('/')
         else:
             print(event_form.errors)
-    return render(request, 'eventsoc/create_event.html', {'event_form': event_form})
+    return render(request, 'eventsoc/create_event.html',
+                  {'event_form': event_form})
 
 
 def register(request):
@@ -107,23 +117,39 @@ def edit_event(request, slug):
             events = []
     else:
         events = []
-    return render(request, 'eventsoc/edit_event.html', {'event_form': event_form, 'event': event, 'slug': slug})
+    return render(request, 'eventsoc/edit_event.html',
+                  {'event_form': event_form, 'event': event, 'slug': slug})
+
+
+@user_passes_test(lambda u: u.is_society, login_url='index')
+def delete_event(request, slug):
+    event = get_object_or_404(Event, slug=slug)
+    creator = request.user
+    if request.method == 'GET':
+        if event.creator == creator:
+            event.delete()
+            return redirect('/')
+
+    return render(request, 'eventsoc/delete_event.html', {"event": event})
 
 
 def show_category(request, category_name_slug):
-    # Create a context dictionary which we can pass to the template rendering engine
+    # Create a context dictionary which we can pass to the template rendering
+    # engine
     context_dict = {}
-    
+
     try:
         # Find category name slug with the given name
         category = Category.objects.get(slug=category_name_slug)
 
         # Retrieve all associated events.
         # filter() will return a list of event object or an empty list.
-        upcoming_events = Event.objects.filter(category=category).order_by('date')
+        upcoming_events = Event.objects.filter(
+            category=category).order_by('date')
 
         # Retrieve popular events in the category
-        trending_events = Event.objects.filter(category=category).order_by('-popularity')[:5]  # TODO correct sorting order?
+        trending_events = Event.objects.filter(category=category).order_by(
+            '-popularity')[:5]  # TODO correct sorting order?
 
         context_dict['trending_events'] = trending_events
         context_dict['upcoming_events'] = upcoming_events
@@ -136,7 +162,7 @@ def show_category(request, category_name_slug):
         # Got here if we didn't find the specified category
         context_dict['category'] = None
         context_dict['upcoming_events'] = None
-    
+
     # Go render the response and return it to the client
     return render(request, "eventsoc/index.html", context_dict)
 
@@ -164,20 +190,21 @@ def edit_profile(request):
 
 @user_passes_test(lambda u: u.is_user, login_url='index')
 def booked(request):
-    upcoming_events = Event.objects.order_by('date')
-    return render(request, "eventsoc/booked.html", {'upcoming_events': upcoming_events})
+    upcoming_events = Event.objects.order_by('date')  # TODO actually show booked events
+    return render(request, "eventsoc/booked.html",
+                  {'upcoming_events': upcoming_events})
 
 
 @login_required
 def account(request):
     user = UserProfile.objects.get(id=request.user.id)
     if user.is_society:
-        account_form = SocietyForm(instance=user)
+        # Need to pass the society's logo
         events = Event.objects.filter(creator=user)
-        return render(request, "eventsoc/account.html", {'account_form': account_form, 'events': events})
+        return render(request, "eventsoc/account.html",
+                      {'user': user, 'events': events})
     else:
-        account_form = StudentForm(instance=user)
-        return render(request, "eventsoc/account.html", {'account_form': account_form})
+        return render(request, "eventsoc/account.html", {'user': user})
 
 
 @user_passes_test(lambda u: u.is_society, login_url='index')
@@ -190,7 +217,8 @@ def society(request):
 # @login_required
 def past_events(request):
     upcoming_events = Event.objects.order_by('date')
-    return render(request, "eventsoc/past_events.html", {'upcoming_events': upcoming_events})
+    return render(request, "eventsoc/past_events.html",
+                  {'upcoming_events': upcoming_events})
 
 
 @login_required

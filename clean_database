@@ -5,4 +5,7 @@ rm db.sqlite3
 
 python manage.py makemigrations eventsoc
 python manage.py migrate
-python manage.py runserver
+
+python populate_eventsoc.py
+
+
