@@ -76,7 +76,7 @@ def register(request):
         if 'user_register' in request.POST:
             if user_form.is_valid():
                 user = user_form.save()
-                user.set_password(user.password)
+                # user.set_password(user.password)
                 user.save()
                 registered = True
                 login(request, user)
@@ -86,7 +86,7 @@ def register(request):
         elif 'society_register' in request.POST:
             if society_form.is_valid():
                 society = society_form.save()
-                society.set_password(society.password)
+                # society.set_password(society.password)
                 society.save()
                 registered = True
                 login(request, society)
@@ -167,16 +167,28 @@ def show_category(request, category_name_slug):
     return render(request, "eventsoc/index.html", context_dict)
 
 
-# @login_required
-@user_passes_test(lambda u: u.is_user, login_url='index')
+@login_required
+# @user_passes_test(lambda u: u.is_user, login_url='index')
 def edit_profile(request):
     user = UserProfile.objects.get(id=request.user.id)
-    form = StudentForm(instance=user)
+
     if request.user.is_authenticated and request.user.is_user:
+        form = StudentForm(instance=user)
         if request.method == 'POST':
             form = StudentForm(request.POST, instance=user)
+            if form.is_valid():
+                update = form.save()
+                update.user = user
+                form.save()
+                # new_user = authenticate(username=form.username, password=form.password)
+                update_session_auth_hash(request, user)
+                login(request, user)
+    elif request.user.is_authenticated and request.user.is_society:
+        form = SocietyForm(instance=user)
+        if request.method == 'POST':
+            form = SocietyForm(request.POST, instance=user)
 
-            if form.is_valid:
+            if form.is_valid():
                 update = form.save()
                 update.user = user
                 form.save()
@@ -184,7 +196,7 @@ def edit_profile(request):
                 update_session_auth_hash(request, user)
                 login(request, user)
     else:
-        form = StudentForm(instance=user)
+        form = EditStudentForm(instance=user)
     return render(request, 'eventsoc/edit_profile.html', {'form': form})
 
 
@@ -225,3 +237,28 @@ def past_events(request):
 def user_logout(request):
     logout(request)
     return HttpResponseRedirect(reverse('index'))
+
+
+# Both booking functions should be called by ajax/jQuery somehow
+
+# Increments event.booked and creates a booking for each user
+@login_required
+def booking(request, slug):
+    if request.is_ajax() and request.method == 'GET': # May only need to check one of these
+        event_id = request.GET['event_id']
+        event = get_object_or_404(Event, id=event_id)
+        event.update(booked=F('booked') + 1)
+        booking = Booking(user=request.user, event=event, booked=True)
+        booking.save()
+    return redirect('eventsoc/event/slug')
+
+# Decrements event.booked and deletes a user's booking
+@login_required
+def cancel_booking(request, slug):
+    if request.method == 'POST':
+        event_id = request.GET['event_id']
+        event = get_object_or_404(Event, id=event_id)
+        event.update(booked=F('booked') - 1)
+        booking = Booking.objects.get(user=request.user, event=event, booked=True)
+        booking.delete()
+    return redirect('eventsoc/event/slug')

@@ -85,8 +85,10 @@ class Event(models.Model):
 class Booking(models.Model):
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='user_booking')
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='event_booking')
+    booked = models.BooleanField(default=False)
 
 
 class Bookmark(models.Model):
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='user_bookmarked')
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='event_bookmarked')
+    bookmarked = models.BooleanField(default=False)

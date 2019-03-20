@@ -2,7 +2,7 @@ from django import forms
 from django.forms import ModelChoiceField
 from django.contrib.auth.models import User
 from eventsoc.models import UserProfile, Society, Event, Category
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 # May only need one of these event forms
 # Might not want to have queryset
 
@@ -10,7 +10,7 @@ from django.contrib.auth.forms import UserCreationForm
 class EventForm(forms.ModelForm):
     class Meta:
         model = Event
-        exclude = ('creator', 'slug', 'popularity')
+        exclude = ('creator', 'slug', 'popularity', 'bookings')
 
 
 # Probably won't be needed, currently isn't used
@@ -29,7 +29,6 @@ class EditEventForm(forms.ModelForm):
 
 class StudentForm(UserCreationForm):
     class Meta:
-        # Model should be society but this causes problems with fields
         model = UserProfile
         fields = ('username', 'password1', 'password2', 'email')
 
@@ -39,8 +38,15 @@ class StudentForm(UserCreationForm):
         :return: cleaned email
         """
         email = self.cleaned_data.get('email', None)
-        if UserProfile.objects.filter(email=email):
-            raise forms.ValidationError('That email is already in registered!')
+        # Checks that the email is unique when creating account
+        if self.cleaned_data.get('username') == "":
+            if UserProfile.objects.filter(email=email):
+                raise forms.ValidationError('That email is already registered!')
+            return email
+        # Checks, when the email is changed, that it is unique
+        username = self.cleaned_data.get('username')
+        if email and UserProfile.objects.filter(email=email).exclude(username=username).count():
+            raise forms.ValidationError('That email is already registered!')
         return email
 
     def clean_password2(self):
@@ -83,6 +89,7 @@ class StudentForm(UserCreationForm):
     def save(self, commit=True):
         userAccount = super().save(commit=False)
         userAccount.is_user = True
+        userAccount.is_active = True
         if commit:
             userAccount.save()
         return userAccount
@@ -101,7 +108,14 @@ class SocietyForm(UserCreationForm):
         :return: cleaned email
         """
         email = self.cleaned_data.get('email', None)
-        if UserProfile.objects.filter(email=email):
+        # Checks that the email is unique when creating account
+        if self.cleaned_data.get('username') == "":
+            if UserProfile.objects.filter(email=email):
+                raise forms.ValidationError('That email is already in registered!')
+            return email
+        username = self.cleaned_data.get('username')
+        # Checks, when the email is changed, that it is unique
+        if email and UserProfile.objects.filter(email=email).exclude(username=username).count():
             raise forms.ValidationError('That email is already in registered!')
         return email
 
@@ -145,8 +159,15 @@ class SocietyForm(UserCreationForm):
     def save(self):
         user = super().save(commit=False)
         user.is_society = True
+        user.is_active = True
         user.save()
-        society = Society.objects.create(user=user)
-        society.email = self.cleaned_data['email']
-        society.logo = self.cleaned_data['logo']
+        # Gets a society object if society editing it's profile or creates a society object if a society is registering
+        try:
+            society = Society.objects.get(user=user)
+            society.email = self.cleaned_data['email']
+            society.logo = self.cleaned_data['logo']
+        except Society.DoesNotExist:
+            society = Society.objects.create(user=user)
+            society.email = self.cleaned_data['email']
+            society.logo = self.cleaned_data['logo']
         return user
