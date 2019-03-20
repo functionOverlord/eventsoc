@@ -86,7 +86,7 @@ class StudentForm(UserCreationForm):
         # THIS LINE!!!!!
         user.is_active = True
         if commit:
-            userAccount.save()
+            user.save()
         return userAccount
 
 
@@ -152,5 +152,5 @@ class SocietyForm(UserCreationForm):
         user.save()
         society = Society.objects.create(user=user)
         society.email = self.cleaned_data['email']
-        society.logo = self.cleaned_data['logo']
+        society.logo = self.cleaned_data.get('logo')
         return user

@@ -69,10 +69,16 @@ def create_event(request):
 
 
 def register(request):
+    # A boolean value for telling the template whether the registration was successful
     registered = False
+
+    # If it's a HTTP POST, we're interested in processing form data
     if request.method == 'POST':
+        # Attempt to grab information from raw form information
         user_form = StudentForm(data=request.POST)
         society_form = SocietyForm(data=request.POST)
+
+        # If it's a student:
         if 'user_register' in request.POST:
             if user_form.is_valid():
                 user = user_form.save()
@@ -82,9 +88,15 @@ def register(request):
             else:
                 print(user_form.errors)
 
+        # If it's a society:
         elif 'society_register' in request.POST:
             if society_form.is_valid():
                 society = society_form.save()
+
+                 # Sorting out the society logo
+                if 'logo' in request.FILES:
+                    society.logo = request.FILES['logo']
+
                 society.save()
                 registered = True
                 login(request, society)

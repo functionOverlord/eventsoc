@@ -7,13 +7,7 @@ from django.utils import timezone
 class UserProfile(AbstractUser):
     is_user = models.BooleanField('student status', default=False)
     is_society = models.BooleanField('society status', default=False)
-
-    # class Meta:
-    #     permissions = (
-    #     ('is_user', "" )
-    #     )
-
-# Is never used, need to overhaul the user models
+    logo = models.ImageField(upload_to='logos', blank=True)
 
 
 class Society(models.Model):
@@ -22,12 +16,6 @@ class Society(models.Model):
         on_delete=models.CASCADE,
         related_name='society_user',
         default='null')
-    logo = models.ImageField(upload_to='logos')
-
-    # class Meta:
-    #     permissions = (
-    #     ('is_society', "A society user" )
-    #     )
 
     def __str__(self):
         return self.user.username
