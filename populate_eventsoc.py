@@ -1,10 +1,10 @@
-from eventsoc.models import Category, Event
 import django
 import os
 os.environ.setdefault('DJANGO_SETTINGS_MODULE',
                       'wad_project.settings')
 
 django.setup()
+from eventsoc.models import Category, Event
 
 
 def populate():

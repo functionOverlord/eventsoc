@@ -52,12 +52,8 @@ class Category(models.Model):
 
 
 class Event(models.Model):
-    # Needs a number booked field
     title = models.CharField(max_length=100, unique=True)
-    creator = models.ForeignKey(
-        UserProfile,
-        on_delete=models.CASCADE,
-        null=True)
+    creator = models.ForeignKey(UserProfile, on_delete=models.CASCADE, null=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     description = models.CharField(max_length=10000)
     date = models.DateTimeField(
@@ -65,8 +61,9 @@ class Event(models.Model):
         null=True)
     address = models.CharField(max_length=50, blank=True)
     room = models.CharField(max_length=25, blank=True, null=True)
-    price = models.IntegerField(blank=True, null=True)
-    capacity = models.IntegerField(blank=True, null=True)
+    price = models.PositiveIntegerField(blank=True, null=True)
+    capacity = models.PositiveIntegerField(blank=True, null=True, default=0)
+    bookings = models.PositiveIntegerField(blank=True, null=True, editable=False, default=0)
     picture = models.ImageField(upload_to='events')
     popularity = models.IntegerField(blank=True, null=True, editable=False)
     slug = models.SlugField(max_length=40, unique=True)
@@ -86,22 +83,10 @@ class Event(models.Model):
 
 
 class Booking(models.Model):
-    user = models.ForeignKey(
-        UserProfile,
-        on_delete=models.CASCADE,
-        related_name='user_booking')
-    event = models.ForeignKey(
-        Event,
-        on_delete=models.CASCADE,
-        related_name='event_booking')
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='user_booking')
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='event_booking')
 
 
 class Bookmark(models.Model):
-    user = models.ForeignKey(
-        UserProfile,
-        on_delete=models.CASCADE,
-        related_name='user_bookmarked')
-    event = models.ForeignKey(
-        Event,
-        on_delete=models.CASCADE,
-        related_name='event_bookmarked')
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='user_bookmarked')
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='event_bookmarked')
