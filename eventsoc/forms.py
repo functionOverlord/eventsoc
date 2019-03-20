@@ -76,8 +76,10 @@ class StudentForm(UserCreationForm):
         return True
 
     def save(self, commit=True):
-        userAccount = super().save(commit=False)
-        userAccount.is_user = True
+        user = super().save(commit=False)
+        user.is_user = True
+        # THIS LINE!!!!!
+        user.is_active = True
         if commit:
             userAccount.save()
         return userAccount
@@ -135,6 +137,8 @@ class SocietyForm(UserCreationForm):
 
     def save(self):
         user = super().save(commit=False)
+        # THIS LINE AGAIN!!!!
+        user.is_active = True
         user.is_society = True
         user.save()
         society = Society.objects.create(user=user)

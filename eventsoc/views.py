@@ -68,7 +68,6 @@ def register(request):
         if 'user_register' in request.POST:
             if user_form.is_valid():
                 user = user_form.save()
-                user.set_password(user.password)
                 user.save()
                 registered = True
                 login(request, user)
@@ -78,7 +77,6 @@ def register(request):
         elif 'society_register' in request.POST:
             if society_form.is_valid():
                 society = society_form.save()
-                society.set_password(society.password)
                 society.save()
                 registered = True
                 login(request, society)
