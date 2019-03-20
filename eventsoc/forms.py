@@ -87,7 +87,7 @@ class StudentForm(UserCreationForm):
         user.is_active = True
         if commit:
             user.save()
-        return userAccount
+        return user
 
 
 class SocietyForm(UserCreationForm):
