@@ -165,16 +165,30 @@ def show_category(request, category_name_slug):
     return render(request, "eventsoc/index.html", context_dict)
 
 
-# @login_required
-@user_passes_test(lambda u: u.is_user, login_url='index')
+@login_required
 def edit_profile(request):
     user = UserProfile.objects.get(id=request.user.id)
-    form = StudentForm(instance=user)
+    if request.user.is_authenticated and request.user.is_user:
+        form = StudentForm(instance=user)
+    else:
+        form = SocietyForm(instance= user)
+
     if request.user.is_authenticated and request.user.is_user:
         if request.method == 'POST':
             form = StudentForm(request.POST, instance=user)
 
-            if form.is_valid:
+            if form.is_valid():
+                update = form.save()
+                update.user = user
+                form.save()
+                # new_user = authenticate(username=form.username, password=form.password)
+                update_session_auth_hash(request, user)
+                login(request, user)
+    elif request.user.is_authenticated and request.user.is_society:
+        if request.method == 'POST':
+            form = SocietyForm(request.POST, instance=user)
+
+            if form.is_valid():
                 update = form.save()
                 update.user = user
                 form.save()
