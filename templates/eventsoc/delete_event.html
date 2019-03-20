@@ -2,12 +2,12 @@
 {% load staticfiles %}
 
 {% block content %}
-<h1>Laaaa</h1>
-<form action="{% url 'event:delete_event' slug=event.slug %}" method="GET">
+
+<form action="{% url 'delete_event' event.slug %}" method="GET">
     {% csrf_token %}
     <p>Are you sure you want to delete this event {{ event.title }}?</p>
     <input type='submit' value='Yes' class='btn btn-warning'>
-    <a href='/' class='btn btn-default'>Cancel</a>
+    <a href='{% url 'index' %}' class='btn btn-default'>Cancel</a>
 </form>
 
 {% endblock %}
