@@ -30,8 +30,7 @@
     </p>
     <p>Logo: </p>
     <!--TODO include ability to load logo once models is sorted -->
-
-    <input type="submit" class="btn btn-primary" name="{% url 'account' %}" value="Edit Details"/>
+    <a class="btn btn-primary" href="{% url 'edit_profile' %}" role="button">Edit Profile</a>
   </div>
   {% if user.is_society %}
   <div class="tab-pane fade" id="events" role="tabpanel" aria-labelledby="events-tab">
