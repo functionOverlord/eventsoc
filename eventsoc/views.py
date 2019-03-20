@@ -190,7 +190,7 @@ def edit_profile(request):
 
 @user_passes_test(lambda u: u.is_user, login_url='index')
 def booked(request):
-    upcoming_events = Event.objects.order_by('date')
+    upcoming_events = Event.objects.order_by('date')  # TODO actually show booked events
     return render(request, "eventsoc/booked.html",
                   {'upcoming_events': upcoming_events})
 
