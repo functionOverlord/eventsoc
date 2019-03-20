@@ -41,8 +41,7 @@
                 </p>
 
                 <div>
-                    <!-- TODO filter events by category if we're doing that -->
-                    <a class="tag" href="#">{{event.category}}</a>
+                    <a class="tag" href="{% url 'show_category' event.category.slug %}">{{event.category}}</a>
                 </div>
                 <br>
 
