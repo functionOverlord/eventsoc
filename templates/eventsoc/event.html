@@ -5,30 +5,61 @@
     Event
 {% endblock %}
 
-<!-- Displays all of the event information  -->
-<!-- Just to test view, Leo to display properly -->
+
 {% block body_block %}
-    <h1>{{ event.title }}</h1>
-    <div>
-    <img class="img-fluid" src="{{ MEDIA_URL }}{{ event.picture }}" alt="Event image">
+
+    <div class="container-fluid event-container">
+
+    <div class="row event-row">
+        <div class="col-12">
+            <h1 class="display-4">{{ event.title }}</h1>
+        </div>
+        <div class="col-md-8">
+            <img class="img-fluid event-image" src="{{ MEDIA_URL }}{{ event.picture }}" alt="Event image">
+        </div>
+        <div class="col-md-4">
+            <div class="jumbotron">
+                <p>
+                    <b>Date and time:</b>
+                    <br>
+                    {{event.date}}
+                </p>
+                <p>
+                    <b>Location:</b>
+                    <br>
+                    {{event.address}}
+                </p> <!-- TODO location icon -->
+                <p>
+                    <b>Price:</b>
+                    <br>
+                    £{{event.price}}
+                </p>
+                <p>
+                    <b>Remaining spaces:</b>
+                    <br>
+                    {{event.remaining_capacity}}
+                </p>
+
+                <div>
+                    <!-- TODO filter events by category if we're doing that -->
+                    <a class="tag" href="#">{{event.category}}</a>
+                </div>
+                <br>
+
+                <!-- TODO event handling -->
+                <a class="btn btn-primary btn-lg" href="#" role="button">Tickets</a>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <hr class="my-4">
+            {{event.description}}
+        </div>
+
     </div>
-    <p>
-    Category: {{event.category}}
-    </p>
-    <p>
-    Description: {{event.description}}
-    </p>
-    <p>
-    When: {{event.date}}
-    </p>
-    <p>
-    Where: {{event.address}}
-    </p>
-    <!-- Should display free if price is 0 -->
-    <p>
-    Price: {{event.price}}
-    </p>
-    <p>
-    Free space: {{ event.remaining_capacity }}
-    </p>
+
+    <hr class="my-4">
+
+    </div>
+
 {% endblock %}
