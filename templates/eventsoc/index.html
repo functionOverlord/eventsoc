@@ -20,7 +20,7 @@
             <img src="{{MEDIA_URL}}{{ event.picture }}" class="d-block w-100" alt="event1" >
             <div class="carousel-caption d-none d-md-block">
                 {{ event.title }}
-                <button type="button" class="btn btn-primary btn-lg" onclick="location.href='event/{{ event.slug }}'">Go to event</button>
+                <button type="button" class="btn btn-primary btn-lg" onclick="location.href='{% url 'event' event.slug %}'">Go to event</button>
             </div>
         </div>
         {% endfor %}
