@@ -1,4 +1,18 @@
 
+.carousel-item {
+	margin: auto;
+	max-width: 90%;
+	max-height: 400px;
+}
+
+.carousel-caption {
+	transform: translateY(-50%);
+}
+
+.carousel-caption h1 {
+	text-shadow: 3px 3px 40px #000;
+}
+
 .event-container{
 	background-color: #c5c8cc;
 }
