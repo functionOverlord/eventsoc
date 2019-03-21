@@ -7,9 +7,10 @@
 
 {% block body_block %}
 <h2>Edit Event</h2>
-<form id="form" method="post" action="{% url 'edit_profile' %}">
+<form id="form" method="post" action="{% url 'edit_profile' %}" enctype="multipart/form-data">
   {% csrf_token %}
   {{ form.as_p }}
-  <input type="submit" class="btn btn-default" name="edit_profile" value="Create"/>
+  Will crash if no logo entered
+  <input type="submit" class="btn btn-primary" name="edit_profile" value="Edit Profile"/>
 </form>
 {% endblock %}

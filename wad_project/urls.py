@@ -38,5 +38,5 @@ urlpatterns = [
     url(r'^(?P<slug>[\w\-]+)/delete/$',
         views.delete_event, name='delete_event'),
     path('event/<slug:slug>/', views.event, name='event'),
-    path('booking/', views.booking, name='booking'),
+    path('booking/', views.booking, name='booking'), # May not be needed for ajax/jQuery
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

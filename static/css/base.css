@@ -1,4 +1,35 @@
 
+.event-container{
+	background-color: #c5c8cc;
+}
+
+.event-row{
+	max-width: 90%;
+	margin: auto;
+	padding-top: 30px;
+	padding-bottom: 30px;
+	background-color: #f7fbff;
+}
+
+.event-image{
+	height: 400px;
+	width: 100%;
+	object-fit: cover;
+}
+
+.jumbotron{
+	padding-top: 20px;
+	padding-bottom: 20px;
+}
+
+.tag{
+	background-color: #b2b2b2;
+	display: inline-block;
+	padding: 1px 5px;
+	border-radius: 4px;
+	font-size: small;
+}
+
 /*{# make the event card images same size, object-fit: cover enables zoom instead of image stretching #}*/
 .card-img-top {
     width: 100%;

@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseForbidden
 from django.urls import reverse
 from django.contrib.auth.decorators import user_passes_test, login_required
-from eventsoc.forms import StudentForm, SocietyForm, EditEventForm, EventForm
+from eventsoc.forms import StudentForm, SocietyForm, EditEventForm, EventForm, EditSocietyForm, EditStudentForm
 from eventsoc.models import Society, Event, UserProfile, Category
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
@@ -69,24 +69,34 @@ def create_event(request):
 
 
 def register(request):
+    # A boolean value for telling the template whether the registration was successful
     registered = False
+
+    # If it's a HTTP POST, we're interested in processing form data
     if request.method == 'POST':
+        # Attempt to grab information from raw form information
         user_form = StudentForm(data=request.POST)
         society_form = SocietyForm(data=request.POST)
+
+        # If it's a student:
         if 'user_register' in request.POST:
             if user_form.is_valid():
                 user = user_form.save()
-                # user.set_password(user.password)
                 user.save()
                 registered = True
                 login(request, user)
             else:
                 print(user_form.errors)
 
+        # If it's a society:
         elif 'society_register' in request.POST:
             if society_form.is_valid():
                 society = society_form.save()
-                # society.set_password(society.password)
+
+                 # Sorting out the society logo
+                if 'logo' in request.FILES:
+                    society.logo = request.FILES['logo']
+
                 society.save()
                 registered = True
                 login(request, society)
@@ -168,31 +178,32 @@ def show_category(request, category_name_slug):
 
 
 @login_required
-# @user_passes_test(lambda u: u.is_user, login_url='index')
 def edit_profile(request):
     user = UserProfile.objects.get(id=request.user.id)
+    if request.user.is_authenticated and request.user.is_user:
+        form = EditStudentForm(instance=user)
+    else:
+        form = EditSocietyForm(instance=user)
 
     if request.user.is_authenticated and request.user.is_user:
-        form = StudentForm(instance=user)
         if request.method == 'POST':
-            form = StudentForm(request.POST, instance=user)
+            form = EditStudentForm(request.POST, instance=user)
             if form.is_valid():
                 update = form.save()
                 update.user = user
                 form.save()
-                # new_user = authenticate(username=form.username, password=form.password)
                 update_session_auth_hash(request, user)
                 login(request, user)
     elif request.user.is_authenticated and request.user.is_society:
-        form = SocietyForm(instance=user)
         if request.method == 'POST':
-            form = SocietyForm(request.POST, instance=user)
-
+            form = EditSocietyForm(request.POST, request.FILES, instance=user)
             if form.is_valid():
                 update = form.save()
+                # Logo edit can cause errors if used multiple times
+                newlogo = UserProfile(logo = request.FILES['logo'])
+                newlogo.save()
                 update.user = user
                 form.save()
-                # new_user = authenticate(username=form.username, password=form.password)
                 update_session_auth_hash(request, user)
                 login(request, user)
     else:
