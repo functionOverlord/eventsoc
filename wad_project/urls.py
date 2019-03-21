@@ -29,6 +29,7 @@ urlpatterns = [
     path('edit_event/<slug:slug>/', views.edit_event, name='edit_event'),
     path('edit_profile/', views.edit_profile, name='edit_profile'),
     path('booked/', views.booked, name='booked'),
+    path('bookmarked/', views.bookmarked, name='bookmarked'),
     path('account/', views.account, name='account'),
     path('past_events/', views.past_events, name='past_events'),
     path('user_logout/', views.user_logout, name='user_logout'),

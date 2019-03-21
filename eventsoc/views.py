@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect, HttpResponse, HttpResponseForbidde
 from django.urls import reverse
 from django.contrib.auth.decorators import user_passes_test, login_required
 from eventsoc.forms import StudentForm, SocietyForm, EditEventForm, EventForm, EditSocietyForm, EditStudentForm
-from eventsoc.models import Society, Event, UserProfile, Category
+from eventsoc.models import Society, Event, UserProfile, Category, Booking, Bookmark
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.shortcuts import redirect, render, get_object_or_404
@@ -217,11 +217,18 @@ def edit_profile(request):
     return render(request, 'eventsoc/edit_profile.html', {'form': form})
 
 
+# These views need to order the events by date
 @user_passes_test(lambda u: u.is_user, login_url='index')
 def booked(request):
-    upcoming_events = Event.objects.order_by('date')  # TODO actually show booked events
+    booked_events = Booking.objects.filter(user=request.user)
     return render(request, "eventsoc/booked.html",
-                  {'upcoming_events': upcoming_events})
+                  {'upcoming_events': booked_events})
+
+@user_passes_test(lambda u: u.is_user, login_url='index')
+def bookmarked(request):
+    bookmarked_events = Bookmark.objects.filter(user=request.user)
+    return render(request, "eventsoc/booked.html",
+                  {'upcoming_events': bookmarked_events})
 
 
 @login_required
@@ -256,7 +263,7 @@ def user_logout(request):
     return HttpResponseRedirect(reverse('index'))
 
 
-# Both booking functions should be called by ajax/jQuery somehow
+# Both booking and bookmark functions should be called by ajax/jQuery somehow
 
 # Increments event.booked and creates a booking for each user
 @login_required
@@ -267,7 +274,7 @@ def booking(request, slug):
         event.update(booked=F('booked') + 1)
         booking = Booking(user=request.user, event=event, booked=True)
         booking.save()
-    return redirect('eventsoc/event/slug')
+    return redirect('eventsoc/event/slug.html')
 
 # Decrements event.booked and deletes a user's booking
 @login_required
@@ -278,4 +285,22 @@ def cancel_booking(request, slug):
         event.update(booked=F('booked') - 1)
         booking = Booking.objects.get(user=request.user, event=event, booked=True)
         booking.delete()
-    return redirect('eventsoc/event/slug')
+    return redirect('eventsoc/event/slug.html')
+
+@login_required
+def bookmark(request):
+    if request.method == 'POST':
+        event_id = request.GET['event_id']
+        event = get_object_or_404(Event, id=event_id)
+        bookmark = Bookmark(user=request.user, event=event, booked=True)
+        bookmark.save()
+    return redirect('eventsoc')
+
+@login_required
+def remove_bookmark(request):
+    if request.method == 'POST':
+        event_id = request.GET['event_id']
+        event = get_object_or_404(Event, id=event_id)
+        bookmark = Bookmark(user=request.user, event=event, booked=True)
+        bookmark.delete()
+    return redirect('eventsoc')

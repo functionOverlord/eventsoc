@@ -52,7 +52,7 @@ class Event(models.Model):
     address = models.CharField(max_length=50, blank=True)
     room = models.CharField(max_length=25, blank=True, null=True)
     price = models.PositiveIntegerField(blank=True, null=True, default=0)
-    capacity = models.PositiveIntegerField(blank=True, null=True)
+    capacity = models.PositiveIntegerField(blank=True, null=True, default=0)
     bookings = models.PositiveIntegerField(blank=True, null=True, editable=False, default=0)
     picture = models.ImageField(upload_to='events')
     popularity = models.IntegerField(blank=True, null=True, editable=False)
