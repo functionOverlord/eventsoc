@@ -8,4 +8,4 @@ python manage.py migrate
 
 python populate_eventsoc.py
 
-
+python manage.py runserver
