@@ -49,6 +49,8 @@
                   <a class="btn btn-primary btn-lg" href="#" role="button">Tickets</a>
                 {% elif user.is_society %}
                   <a class="btn btn-primary" href="{% url 'edit_event' event.slug %}" role="button">Edit Event</a>
+                  <a class="btn btn-primary" href="{{ event.name }}delete" role="button">Delete Event</a>
+
                 {% endif %}
             </div>
         </div>

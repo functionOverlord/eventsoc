@@ -35,8 +35,7 @@ urlpatterns = [
     path('user_logout/', views.user_logout, name='user_logout'),
     url(r'^(?P<category_name_slug>[\w\-]+)/$',
         views.show_category, name='show_category'),
-    url(r'^(?P<slug>[\w\-]+)/delete/$',
-        views.delete_event, name='delete_event'),
+    path('event/<slug:slug>/delete/', views.delete_event, name='delete_event'),
     path('event/<slug:slug>/', views.show_event, name='event'),
     path('booking/', views.booking, name='booking'), # May not be needed for ajax/jQuery
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
