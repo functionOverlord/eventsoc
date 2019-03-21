@@ -20,7 +20,7 @@
   <div class="tab-pane fade show active" id="account" role="tabpanel" aria-labelledby="account-tab">
     <h1>Account Info</h1>
     <p>
-      Name: {{user.username}}
+      Username: {{ user.username }}
     </p>
     <p>
       Password: *****
@@ -28,13 +28,23 @@
     <p>
       Email: {{user.email}}
     </p>
-    <p>Logo: </p>
-    <!--TODO include ability to load logo once models is sorted -->
-    <a class="btn btn-primary" href="{% url 'edit_profile' %}" role="button">Edit Profile</a>
+    {% if user.is_society %}
+      <p>
+        Society Name: {{ user.society_name }}
+      <p>
+        URL: {{ user.social_media_website }}
+      </p>
+      </p>
+      <p>Logo:</p>
+        <img src="{{ MEDIA_URL }}{{ user.logo }}" alt="logo of the society">
+    {% endif %}
+    <div>
+      <a class="btn btn-primary" href="{% url 'edit_profile' %}" role="button">Edit Profile</a>
+    </div>
   </div>
   {% if user.is_society %}
   <div class="tab-pane fade" id="events" role="tabpanel" aria-labelledby="events-tab">
-    <h2>{{user.username}}'s Events</h2>
+    <h2>{{ user.society_name }}'s Events</h2>
       <div class="container-fluid">
           <div class="row">
               {% for event in events %}
