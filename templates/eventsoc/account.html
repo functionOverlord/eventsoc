@@ -34,7 +34,6 @@
       <p>
         URL: {{ user.social_media_website }}
       </p>
-      </p>
       <p>Logo:</p>
         <img src="{{ MEDIA_URL }}{{ user.logo }}" alt="logo of the society">
     {% endif %}
@@ -57,10 +56,6 @@
                               <p class="card-text">{{ event.place_name }}</p>
                               <p class="card-text"><small class="text-muted">{{ event.address }}</small></p>
                               <p class="card-text"><small class="text-muted">Price: {{ event.price }}</small></p>
-                              <div class="label-container">
-                                  <div class="label-text">Bookmark</div>
-                                  <i class="fa fa-play label-arrow"></i>
-                              </div>
                           </div>
                       </div>
                   </div>

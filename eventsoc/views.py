@@ -129,6 +129,10 @@ def edit_event(request, slug):
             if event_form.is_valid:
                 update = event_form.save()
                 update.society = society
+                messages.add_message(
+                    request,
+                    messages.SUCCESS,
+                    "Successfully saved!")
                 update.save()
         else:
             events = []

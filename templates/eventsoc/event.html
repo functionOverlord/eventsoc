@@ -44,9 +44,12 @@
                     <a class="tag" href="{% url 'show_category' event.category.slug %}">{{event.category}}</a>
                 </div>
                 <br>
-
+                {% if user.is_user %}
                 <!-- TODO event handling -->
-                <a class="btn btn-primary btn-lg" href="#" role="button">Tickets</a>
+                  <a class="btn btn-primary btn-lg" href="#" role="button">Tickets</a>
+                {% else %}
+                  <a class="btn btn-primary" href="{% url 'edit_event' event.slug %}" role="button">Edit Event</a>
+                {% endif %}
             </div>
         </div>
 
