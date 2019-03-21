@@ -9,7 +9,7 @@ class UserProfile(AbstractUser):
     is_user = models.BooleanField('student status', default=False)
     is_society = models.BooleanField('society status', default=False)
     logo = models.ImageField(upload_to='logos', blank=True)
-    society_name = models.CharField(max_length=200, unique=True)
+    society_name = models.CharField(max_length=200, blank=False)
     social_media_website = models.URLField(blank=True)
 
 class Society(models.Model):
