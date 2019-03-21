@@ -9,6 +9,7 @@ from django.contrib.auth import authenticate, login, logout, update_session_auth
 from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib import messages
 from django.views.generic.edit import DeleteView
+from django.db.models import F
 
 
 def index(request):
