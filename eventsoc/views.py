@@ -205,6 +205,10 @@ def edit_profile(request):
                 form.save()
                 # new_user = authenticate(creator=form.creator, password=form.password)
                 update_session_auth_hash(request, user)
+                messages.add_message(
+                    request,
+                    messages.SUCCESS,
+                    "Successfully saved!")
                 login(request, user)
     elif request.user.is_authenticated and request.user.is_society:
         if request.method == 'POST':
@@ -218,6 +222,10 @@ def edit_profile(request):
                 form.save()
                 # new_user = authenticate(creator=form.creator, password=form.password)
                 update_session_auth_hash(request, user)
+                messages.add_message(
+                    request,
+                    messages.SUCCESS,
+                    "Successfully saved!")
                 login(request, user)
     else:
         form = EditStudentForm(instance=user)
