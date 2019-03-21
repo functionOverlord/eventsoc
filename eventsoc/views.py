@@ -65,7 +65,7 @@ def create_event(request):
             event.creator = request.user
             event.save()
             # Redirect user to the event page they've created
-            return show_event(request, event.slug)
+            return redirect('../event/'+event.slug)
         else:
             print(event_form.errors)
 
