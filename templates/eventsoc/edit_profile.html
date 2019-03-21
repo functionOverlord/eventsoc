@@ -10,7 +10,7 @@
 <form id="form" method="post" action="{% url 'edit_profile' %}" enctype="multipart/form-data">
   {% csrf_token %}
   {{ form.as_p }}
-  Will crash if no logo entered
+  Logo will cause lots of errors (usually when not entered or logo changed more than once)
   <input type="submit" class="btn btn-primary" name="edit_profile" value="Edit Profile"/>
 </form>
 {% endblock %}

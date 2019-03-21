@@ -22,6 +22,7 @@ def index(request):
 
 
 def user_login(request):
+    # If the request is a HTTP POST, try to pull out the relevant information.
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -30,20 +31,24 @@ def user_login(request):
         if user:
             if user.is_active:
                 login(request, user)
+                # We'll send the user back to the homepage
                 return HttpResponseRedirect(reverse('index'))
             else:
-                return HttpResponse("account disabled")
+                # An inactive account was used - no logging in!
+                return HttpResponse("Your EventSoc account is disabled!")
         else:
+            # Bad login details were provided. So we can't log the user in.
             messages.add_message(
                 request,
                 messages.ERROR,
                 "Incorrect user or password")
             return HttpResponseRedirect(reverse('login'))
+    # The request is not a HTTP POST, so display the login form.
     else:
         return render(request, 'eventsoc/login.html', {})
 
 
-def event(request, slug):
+def show_event(request, slug):
     event = Event.objects.get(slug=slug)
     return render(request, 'eventsoc/event.html',
                   {'slug': slug, 'event': event})
@@ -58,12 +63,11 @@ def create_event(request):
             event = event_form.save(commit=True)
             event.creator = request.user
             event.save()
-            # Need to create a slug event url to direct user to the event page they've created
-            # redirect = 'eventsoc/'
-            # return index(request)
-            return redirect('/')
+            # Redirect user to the event page they've created
+            return show_event(request, event.slug)
         else:
             print(event_form.errors)
+
     return render(request, 'eventsoc/create_event.html',
                   {'event_form': event_form})
 
@@ -103,6 +107,8 @@ def register(request):
             else:
                 print(society_form.errors)
     else:
+        # Not a HTTP POST, so we render our form using two ModelForm instances.
+        # These forms will be blank, ready for user input.
         user_form = StudentForm()
         society_form = SocietyForm()
     return render(request, 'eventsoc/register.html',
