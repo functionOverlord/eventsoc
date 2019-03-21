@@ -1,0 +1,16 @@
+
+.register-form {
+    display: none;
+}
+
+/*.register-buttons {*/
+    /*padding: auto;*/
+/*}*/
+
+form > ul {
+    display: none;
+}
+
+.helptext {
+    display: none;
+}

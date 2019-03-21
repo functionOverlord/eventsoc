@@ -1,4 +1,4 @@
-{%  extends 'eventsoc/base.html' %}
+{% extends 'eventsoc/base.html' %}
 {% load staticfiles %}
 
 {% block title_block %}
@@ -6,29 +6,47 @@
 {% endblock %}
 
 {% block body_block %}
-{% if registered %}
-  Thank you for registering!
-  <a href="{% url 'index' %}">Return to homepage</a>
-{% else %}
-<div class="container">
-  <div class="row">
-    <div class="col-sm">
-      <h2>User Registration</h2>
-        <form id="user_form" method="post" action="{% url 'register' %}" enctype="multipart/form-data">
-          {% csrf_token %}
-          {{ user_form.as_p }}
-          <input type="submit" class="btn btn-primary" name="user_register" value="Create User"/>
-        </form>
-      </div>
-    <div class="col-sm">
-      <h2>Society Registration</h2>
-      <form id="society_form" method="post" action="{% url 'register' %}"  enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ society_form.as_p }}
-        <input type="submit" class="btn btn-primary" name="society_register" value="Create Society"/>
-      </form>
-    </div>
-   </div>
-</div>
-{% endif %}
+
+    <link rel="stylesheet" href="{% static "css/login_pages.css" %}"/>
+
+    {% if registered %} {% comment %}TODO remove this{% endcomment %}
+        Thank you for registering!
+        <a href="{% url 'index' %}">Return to homepage</a>
+    {% else %}
+
+        <div class="container">
+
+            <div class="row register-buttons">
+                <div class="col">
+                    <button class="btn btn-success btn-register-user" type="button">Register as a User</button>
+                    <button class="btn btn-success btn-register-society" type="button">Register as a Society</button>
+                </div>
+            </div>
+
+            <div class="row register-form" id="user-form">
+                <div class="col">
+                    <form method="post" action="{% url 'register' %}" enctype="multipart/form-data">
+                        <h2>User Registration</h2>
+                        {% csrf_token %}
+                        {{ user_form.as_p }}
+                        <input type="submit" class="btn btn-primary" name="user_register" value="Create User"/>
+                    </form>
+                </div>
+            </div>
+
+            <div class="row register-form" id="society-form">
+                <div class="col">
+                    <form method="post" action="{% url 'register' %}" enctype="multipart/form-data">
+                        <h2>Society Registration</h2>
+                        {% csrf_token %}
+                        {{ society_form.as_p }}
+                        <input type="submit" class="btn btn-primary" name="society_register" value="Create Society"/>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+    {% endif %}
+
 {% endblock %}
