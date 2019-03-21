@@ -203,6 +203,7 @@ def edit_profile(request):
                 update = form.save()
                 update.user = user
                 form.save()
+                # new_user = authenticate(creator=form.creator, password=form.password)
                 update_session_auth_hash(request, user)
                 login(request, user)
     elif request.user.is_authenticated and request.user.is_society:
@@ -215,6 +216,7 @@ def edit_profile(request):
                 newlogo.save()
                 update.user = user
                 form.save()
+                # new_user = authenticate(creator=form.creator, password=form.password)
                 update_session_auth_hash(request, user)
                 login(request, user)
     else:
