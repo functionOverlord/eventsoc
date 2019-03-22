@@ -100,6 +100,11 @@ def register(request):
                 user.save()
                 registered = True
                 login(request, user)
+                messages.add_message(
+                    request,
+                    messages.SUCCESS,
+                    "Successfully registered!")
+                return redirect('index')
             else:
                 print(user_form.errors)
 
@@ -115,6 +120,11 @@ def register(request):
                 society.save()
                 registered = True
                 login(request, society)
+                messages.add_message(
+                    request,
+                    messages.SUCCESS,
+                    "Successfully registered!")
+                return redirect('index')
             else:
                 print(society_form.errors)
     else:
