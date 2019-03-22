@@ -25,7 +25,7 @@
 
             <div class="row register-form" id="user-form">
                 <div class="col">
-                    <form method="post" action="{% url 'register' %}" enctype="multipart/form-data">
+                    <form method="post" id="user-form" action="{% url 'register' %}" enctype="multipart/form-data">
                         <h2>User Registration</h2>
                         {% csrf_token %}
                         {{ user_form.as_p }}
@@ -36,7 +36,7 @@
 
             <div class="row register-form" id="society-form">
                 <div class="col">
-                    <form method="post" action="{% url 'register' %}" enctype="multipart/form-data">
+                    <form method="post" id="society-form" action="{% url 'register' %}" enctype="multipart/form-data">
                         <h2>Society Registration</h2>
                         {% csrf_token %}
                         {{ society_form.as_p }}
