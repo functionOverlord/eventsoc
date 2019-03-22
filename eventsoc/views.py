@@ -17,7 +17,7 @@ def index(request):
     return render(request,
                   "eventsoc/index.html",
                   {'trending_events': trending_events,
-                   'upcoming_events': upcoming_events})
+                   'events': upcoming_events})
 
 
 def user_login(request):
@@ -261,7 +261,7 @@ def booked(request):
         booking = booked_events.values('event_id')[counter]
         temp.append(Event.objects.get(id=booking['event_id']))
         counter+=1
-    return render(request, 'eventsoc/booked.html',{'books':temp})
+    return render(request, 'eventsoc/booked.html',{'events':temp})
 
 
 # Returns the events that the user has bookmarked
@@ -275,7 +275,7 @@ def bookmarked(request):
         temp.append(Event.objects.get(id=booking['event_id']))
         counter+=1
     return render(request, "eventsoc/bookmarked.html",
-                  {'upcoming_events': temp})
+                  {'events': temp})
 
 
 @login_required

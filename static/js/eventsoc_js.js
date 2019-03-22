@@ -17,5 +17,10 @@ $(function () {
     $(".register-back").click(function () {
         $(".register-form").hide();
         $(".register-buttons").css("display", "inline");
-    })
+    });
+
+
+    // hide bookmark hearts from booked and bookmarked pages from event cards
+    $(".bookmarked-page .float").hide();
+    $(".booked-page .float").hide();
 });
