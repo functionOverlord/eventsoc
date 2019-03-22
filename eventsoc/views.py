@@ -50,9 +50,15 @@ def user_login(request):
 
 
 def show_event(request, slug):
+    user = UserProfile.objects.get(id=request.user.id)
     event = Event.objects.get(slug=slug)
+    booked = Booking.objects.filter(user=user, event=event).exists()
+    bookmarked = Bookmark.objects.filter(user=user, event=event).exists()
+    creator = False
+    if event.creator == user:
+        creator = True
     return render(request, 'eventsoc/event.html',
-                  {'slug': slug, 'event': event})
+                  {'slug': slug, 'event': event, 'creator': creator, 'booked': booked, 'bookmarked': bookmarked})
 
 
 @user_passes_test(lambda u: u.is_society, login_url='index')
@@ -268,7 +274,6 @@ def bookmarked(request):
 def account(request):
     user = UserProfile.objects.get(id=request.user.id)
     if user.is_society:
-        # Need to pass the society's logo
         events = Event.objects.filter(creator=user)
         return render(request, "eventsoc/account.html",
                       {'user': user, 'events': events})
@@ -303,7 +308,8 @@ def user_logout(request):
 def booking(request, slug):
     if request.method == 'GET':
         event = get_object_or_404(Event, slug=slug)
-        event.booked =  F('booked') - 1
+        event.booked =  F('booked') + 1
+        event.save()
         booking = Booking(user=request.user, event=event, booked=True)
         booking.save()
         messages.add_message(
@@ -315,14 +321,19 @@ def booking(request, slug):
 # Decrements event.booked and deletes a user's booking
 @login_required
 def cancel_booking(request, slug):
-    if request.method == 'POST':
-        event_id = request.GET['event_id']
-        event = get_object_or_404(Event, id=event_id)
-        event.update(booked=F('booked') - 1)
+    if request.method == 'GET':
+        event = get_object_or_404(Event, slug=slug)
+        event.booked =  F('booked') - 1
+        event.save()
         booking = Booking.objects.get(user=request.user, event=event, booked=True)
         booking.delete()
-    return redirect('eventsoc/event/slug.html')
+        messages.add_message(
+            request,
+            messages.SUCCESS,
+            "Successfully cancelled booking!")
+    return redirect('../')
 
+# Bookmarks an event for a user
 @login_required
 def bookmark(request, slug):
     if request.method == 'GET':
@@ -335,11 +346,16 @@ def bookmark(request, slug):
             "Successfully bookmarked!")
     return redirect('../')
 
+# Removes a bookmark for a user
 @login_required
-def remove_bookmark(request):
-    if request.method == 'POST':
-        event_id = request.GET['event_id']
-        event = get_object_or_404(Event, id=event_id)
-        bookmark = Bookmark(user=request.user, event=event, booked=True)
+def remove_bookmark(request, slug):
+    if request.method == 'GET':
+        event = get_object_or_404(Event, slug=slug)
+        bookmark = Bookmark.objects.get(user=request.user, event=event, bookmarked=True)
+        print(bookmark)
         bookmark.delete()
-    return redirect('eventsoc')
+        messages.add_message(
+            request,
+            messages.SUCCESS,
+            "Successfully removed bookmark!")
+    return redirect('../')
