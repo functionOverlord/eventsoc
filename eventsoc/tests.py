@@ -2,6 +2,8 @@ from django.test import TestCase
 from eventsoc.models import UserProfile, Society, Category, Event
 from eventsoc.forms import SocietyForm
 from django.template.defaultfilters import slugify
+from django.contrib.staticfiles import finders
+from django.urls import reverse
 
 # class TestUserProfile(TestCase):
 #     def create_user(self, is_user=True, username="TestUser", password1="testpassword12", password2="testpassword12", email="test@test.com")
@@ -13,6 +15,19 @@ from django.template.defaultfilters import slugify
 #         self.assertEqual(u.__unicode__(), u.username)
 #         self.assertEqual(u.__unicode__(), u.password1)
 #         self.assertEqual(u.__unicode)
+
+
+class GeneralTests(TestCase):
+    # Check if files exist in static media folder
+    # Returns None if file is not found
+    def test_static_files(self):
+        static_media = finders.find('images/logo.png')
+        self.assertIsNotNone(static_media)
+
+    # Check if user successfully gets to the index page
+    def test_urls(self):
+        response = self.client.get(reverse('index'))
+        self.assertEqual(response.status_code, 200)
 
 class TestModels(TestCase):
     def create_society(self, is_user=True, username="TestUser", password="testpassword12", email="test@test.com", ):
