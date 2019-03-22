@@ -18,6 +18,23 @@ from django.contrib.staticfiles import finders
 #         self.assertEqual(u.__unicode)
 
 
+class TestStudentUser(TestCase):
+    # Set up Student account
+    def setUp(self):
+        user = UserProfile.objects.create(username="monkey", email="monkey@gmail.com")
+        user.set_password("pepsikola5")
+        user.save()
+
+    # Check if created Studen account exists and if there's only one profile for it
+    def test_student_exists(self):
+        UserProfile.objects.get(username="monkey")
+        self.assertEqual(1, UserProfile.objects.count(), "Number of Profiles must be 1")
+
+    # Check if Student can log in with their credentials
+    def test_student_login(self):
+        login = self.client.login(username='monkey', password="pepsikola5")
+        self.assertTrue(login)
+
 class GeneralTests(TestCase):
     # Check if files exist in static media folder
     # Returns None if file is not found
