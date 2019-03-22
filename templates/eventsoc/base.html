@@ -60,17 +60,17 @@
                   {% if user.is_authenticated %}
                   <ul class="navbar-nav ml-auto">
                       <form class="form-inline">
+                          <button class="btn btn-outline-success" id="about-btn">Contact Us</button>
                           <button class="btn btn-outline-success" type="button" onclick="location.href='{% url 'account' %}'">Account</button>
                           <button class="btn btn-outline-success" type="button" onclick="location.href='{% url 'user_logout' %}'">Logout</button>
-                          <button class="btn btn-outline-success" id="about-btn">Contact Us</button>
                       </form>
                   </ul>
                   {% else %}
                   <ul class="navbar-nav ml-auto">
                         <form class="form-inline">
+                          <button class="btn btn-outline-success" id="about-btn">Contact Us</button>
                           <button class="btn btn-outline-success" type="button" onclick="location.href='{% url 'login' %}'">Login</button>
                           <button class="btn btn-outline-success" type="button" onclick="location.href='{% url 'register' %}'">Register</button>
-                          <button class="btn btn-outline-success" id="about-btn">Contact Us</button>
                       </form>
                   </ul>
                   {% endif %}
