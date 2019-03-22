@@ -1,11 +1,8 @@
 from django import forms
-from django.forms import ModelChoiceField
 from django.contrib.auth.models import User
 from eventsoc.models import UserProfile, Society, Event, Category
 from django.contrib.auth.forms import UserCreationForm
 from eventsoc.form_functions import check_email, check_password
-# May only need one of these event forms
-# Might not want to have queryset
 
 
 class EventForm(forms.ModelForm):
@@ -14,25 +11,10 @@ class EventForm(forms.ModelForm):
         exclude = ('creator', 'slug', 'popularity', 'bookings')
 
 
-# Probably won't be needed, currently isn't used
-class EditEventForm(forms.ModelForm):
-    class Meta:
-        model = Event
-        exclude = ('creator', 'slug', 'popularity')
-
-
-# class EditProfile(forms.ModelForm):
-    #
-    # class Meta:
-    #     model = UserProfile
-    #     fields = ('username', 'password', 'email')
-
-
 class StudentForm(UserCreationForm):
     class Meta:
         model = UserProfile
         fields = ('username', 'password1', 'password2', 'email')
-
 
     def clean_email(self):
         return(check_email(self))
@@ -76,6 +58,7 @@ class SocietyForm(UserCreationForm):
         society.logo = self.cleaned_data['logo']
         return user
 
+
 class EditStudentForm(UserCreationForm):
     class Meta:
         model = UserProfile
@@ -96,6 +79,7 @@ class EditStudentForm(UserCreationForm):
             user.save()
         return user
 
+
 class EditSocietyForm(UserCreationForm):
     logo = forms.ImageField(required=False)
 
@@ -103,7 +87,6 @@ class EditSocietyForm(UserCreationForm):
         model = UserProfile
         fields = ('society_name', 'social_media_website', 'password1', 'password2', 'email', 'logo')
         exclude = ('username', )
-
 
     def clean_email(self):
         return(check_email(self))

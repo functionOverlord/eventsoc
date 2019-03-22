@@ -31,7 +31,6 @@ urlpatterns = [
     path('booked/', views.booked, name='booked'),
     path('bookmarked/', views.bookmarked, name='bookmarked'),
     path('account/', views.account, name='account'),
-    path('past_events/', views.past_events, name='past_events'),
     path('user_logout/', views.user_logout, name='user_logout'),
     url(r'^(?P<category_name_slug>[\w\-]+)/$',
         views.show_category, name='show_category'),

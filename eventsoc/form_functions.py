@@ -13,10 +13,11 @@ def check_email(self):
     """
 
     email = self.cleaned_data.get('email', None)
-    # Checks that the email is unique when creating account
     user = UserProfile.objects.filter(email=email).values('username')
     uservalues = user.values()
     username = self.cleaned_data.get('username')
+    
+    # Checks that the email is unique when creating account
     if username not in user and username != None:
         if UserProfile.objects.filter(email=email):
             raise forms.ValidationError('That email is already registered!')

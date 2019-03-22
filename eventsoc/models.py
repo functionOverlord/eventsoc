@@ -33,9 +33,6 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
-    # def get_absolute_url(self):
-    #    return "/categories/%s/" % self.slug
-
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
         super(Category, self).save(*args, **kwargs)

@@ -1,20 +1,18 @@
 from django.shortcuts import render
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponseForbidden
+from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import user_passes_test, login_required
-from eventsoc.forms import StudentForm, SocietyForm, EditEventForm, EventForm, EditSocietyForm, EditStudentForm
+from eventsoc.forms import StudentForm, SocietyForm, EventForm, EditSocietyForm, EditStudentForm
 from eventsoc.models import Society, Event, UserProfile, Category, Booking, Bookmark
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib import messages
-from django.views.generic.edit import DeleteView
 from django.db.models import F
 
 
 def index(request):
-    trending_events = Event.objects.order_by(
-        '-popularity')[:5]  # TODO correct sorting order?
+    trending_events = Event.objects.order_by('-popularity')[:5]  # TODO correct sorting order?
     upcoming_events = Event.objects.order_by('date')
     return render(request,
                   "eventsoc/index.html",
@@ -64,6 +62,7 @@ def show_event(request, slug):
         event = Event.objects.get(slug=slug)
         return render(request, 'eventsoc/event.html',
                       {'slug': slug, 'event': event})
+
 
 @user_passes_test(lambda u: u.is_society, login_url='index')
 def create_event(request):
@@ -144,24 +143,18 @@ def edit_event(request, slug):
     event = Event.objects.get(slug=slug)
     event_form = EventForm(instance=event)
     if request.user.is_authenticated:
-        if event.creator == request.user:
-            if request.method == 'POST':
-                event_form = EventForm(request.POST, request.FILES, instance=event)
-                if event_form.is_valid:
-                    update = event_form.save()
-                    update.society = society
-                    messages.add_message(
-                        request,
-                        messages.SUCCESS,
-                        "Successfully saved!")
-                    update.save()
-            else:
-                events = []
+        if request.method == 'POST':
+            event_form = EventForm(request.POST, request.FILES, instance=event)
+            if event_form.is_valid:
+                update = event_form.save()
+                update.society = society
+                messages.add_message(
+                    request,
+                    messages.SUCCESS,
+                    "Successfully saved!")
+                update.save()
         else:
-            messages.add_message(
-                request,
-                messages.ERROR,
-                "Cannot edit this event as it does not belong to you!")
+            events = []
     else:
         events = []
     return render(request, 'eventsoc/edit_event.html',
@@ -222,6 +215,7 @@ def edit_profile(request):
     else:
         form = EditSocietyForm(instance=user)
 
+    # Displays different forms for student and society
     if request.user.is_authenticated and request.user.is_user:
         if request.method == 'POST':
             form = EditStudentForm(request.POST, instance=user)
@@ -229,24 +223,23 @@ def edit_profile(request):
                 update = form.save()
                 update.user = user
                 form.save()
-                # new_user = authenticate(creator=form.creator, password=form.password)
                 update_session_auth_hash(request, user)
                 messages.add_message(
                     request,
                     messages.SUCCESS,
                     "Successfully saved!")
                 login(request, user)
+
     elif request.user.is_authenticated and request.user.is_society:
         if request.method == 'POST':
             form = EditSocietyForm(request.POST, request.FILES, instance=user)
             if form.is_valid():
                 update = form.save()
-                # Logo edit can cause errors if used multiple times
+                # Logo edit causes errors if trying to edit multiple times in immediate succession
                 newlogo = UserProfile(logo = request.FILES['logo'])
                 newlogo.save()
                 update.user = user
                 form.save()
-                # new_user = authenticate(creator=form.creator, password=form.password)
                 update_session_auth_hash(request, user)
                 messages.add_message(
                     request,
@@ -257,8 +250,6 @@ def edit_profile(request):
         form = EditStudentForm(instance=user)
     return render(request, 'eventsoc/edit_profile.html', {'form': form})
 
-
-# These views need to order the events by date
 
 # Returns the events that the user has booked
 @user_passes_test(lambda u: u.is_user, login_url='index')
@@ -272,6 +263,7 @@ def booked(request):
         counter+=1
     return render(request, 'eventsoc/booked.html',{'books':temp})
 
+
 # Returns the events that the user has bookmarked
 @user_passes_test(lambda u: u.is_user, login_url='index')
 def bookmarked(request):
@@ -282,7 +274,6 @@ def bookmarked(request):
         booking = bookmarked_events.values('event_id')[counter]
         temp.append(Event.objects.get(id=booking['event_id']))
         counter+=1
-    print(temp)
     return render(request, "eventsoc/bookmarked.html",
                   {'upcoming_events': temp})
 
@@ -298,34 +289,21 @@ def account(request):
         return render(request, "eventsoc/account.html", {'user': user})
 
 
-@user_passes_test(lambda u: u.is_society, login_url='index')
-def society(request):
-    society = UserProfile.objects.get(id=request.user.id)
-    form = SocietyForm(instance=society)
-    return render(request, "eventsoc/society.html", {'form': form})
-
-
-# @login_required
-def past_events(request):
-    upcoming_events = Event.objects.order_by('date')
-    return render(request, "eventsoc/past_events.html",
-                  {'upcoming_events': upcoming_events})
-
-
 @login_required
 def user_logout(request):
     logout(request)
     return HttpResponseRedirect(reverse('index'))
 
 
-
 # Increments event.booked and creates a booking for each user
 @login_required
 def booking(request, slug):
     if request.method == 'GET':
+        # Increment bookings
         event = get_object_or_404(Event, slug=slug)
         event.bookings =  F('bookings') + 1
         event.save()
+        # Create new booking
         booking = Booking(user=request.user, event=event, booked=True)
         booking.save()
         messages.add_message(
@@ -338,9 +316,11 @@ def booking(request, slug):
 @login_required
 def cancel_booking(request, slug):
     if request.method == 'GET':
+        # Decrement bookings
         event = get_object_or_404(Event, slug=slug)
         event.bookings =  F('bookings') - 1
         event.save()
+        # Get and delete a booking
         booking = Booking.objects.get(user=request.user, event=event, booked=True)
         booking.delete()
         messages.add_message(
@@ -353,6 +333,7 @@ def cancel_booking(request, slug):
 @login_required
 def bookmark(request, slug):
     if request.method == 'GET':
+        # Create a new bookmark
         event = get_object_or_404(Event, slug=slug)
         bookmark = Bookmark(user=request.user, event=event, bookmarked=True)
         bookmark.save()
@@ -366,9 +347,9 @@ def bookmark(request, slug):
 @login_required
 def remove_bookmark(request, slug):
     if request.method == 'GET':
+        # Get and delete a bookmark
         event = get_object_or_404(Event, slug=slug)
         bookmark = Bookmark.objects.get(user=request.user, event=event, bookmarked=True)
-        print(bookmark)
         bookmark.delete()
         messages.add_message(
             request,
