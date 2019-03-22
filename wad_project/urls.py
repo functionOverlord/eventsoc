@@ -37,5 +37,5 @@ urlpatterns = [
         views.show_category, name='show_category'),
     path('event/<slug:slug>/delete/', views.delete_event, name='delete_event'),
     path('event/<slug:slug>/', views.show_event, name='event'),
-    path('booking/', views.booking, name='booking'), # May not be needed for ajax/jQuery
+    path('event/<slug:slug>/booking/', views.booking, name='booking'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

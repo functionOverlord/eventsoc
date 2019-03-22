@@ -236,8 +236,14 @@ def edit_profile(request):
 @user_passes_test(lambda u: u.is_user, login_url='index')
 def booked(request):
     booked_events = Booking.objects.filter(user=request.user)
-    return render(request, "eventsoc/booked.html",
-                  {'upcoming_events': booked_events})
+    temp=[]
+    counter = 0
+    for i in booked_events:
+        booking = booked_events.values('event_id')[counter]
+        temp.append(Event.objects.get(id=booking['event_id']))
+        counter+=1
+    print(temp)
+    return render(request, 'eventsoc/booked.html',{'books':temp})
 
 @user_passes_test(lambda u: u.is_user, login_url='index')
 def bookmarked(request):
@@ -283,13 +289,16 @@ def user_logout(request):
 # Increments event.booked and creates a booking for each user
 @login_required
 def booking(request, slug):
-    if request.is_ajax() and request.method == 'GET': # May only need to check one of these
-        event_id = request.GET['event_id']
-        event = get_object_or_404(Event, id=event_id)
-        event.update(booked=F('booked') + 1)
+    if request.method == 'GET':
+        event = get_object_or_404(Event, slug=slug)
+        event.booked =  F('booked') - 1
         booking = Booking(user=request.user, event=event, booked=True)
         booking.save()
-    return redirect('eventsoc/event/slug.html')
+        messages.add_message(
+            request,
+            messages.SUCCESS,
+            "Successfully booked!")
+    return redirect('../')
 
 # Decrements event.booked and deletes a user's booking
 @login_required

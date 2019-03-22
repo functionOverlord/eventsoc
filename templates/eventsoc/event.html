@@ -7,7 +7,13 @@
 
 
 {% block body_block %}
-
+{% if messages %}
+  <ul class="list-group">
+      {% for message in messages %}
+        <li class="list-group-item list-group-item-success" {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+      {% endfor %}
+  </ul>
+{% endif %}
     <div class="container-fluid event-container">
 
     <div class="row event-row">
@@ -44,9 +50,12 @@
                     <a class="tag" href="{% url 'show_category' event.category.slug %}">{{event.category}}</a>
                 </div>
                 <br>
+
                 {% if user.is_user %}
                 <!-- TODO event handling -->
-                  <a class="btn btn-primary btn-lg" href="#" role="button">Tickets</a>
+                  <form action="booking" method="get">
+                    <input class="btn btn-primary btn-lg" type="submit" value="Book a place">
+                  </form>
                 {% elif user.is_society %}
                   <a class="btn btn-primary" href="{% url 'edit_event' event.slug %}" role="button">Edit Event</a>
                   <a class="btn btn-primary" href="{{ event.name }}delete" role="button">Delete Event</a>
