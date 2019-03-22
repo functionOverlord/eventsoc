@@ -77,6 +77,7 @@
                       <input class="btn btn-primary btn-lg" type="submit" value="Book a place">
                     </form>
                   {% endif %}
+                {% elif user.is_society %}
                   {% if creator %}
                     <a class="btn btn-primary" href="{% url 'edit_event' event.slug %}" role="button">Edit Event</a>
                     <a class="btn btn-primary" href="{{ event.name }}delete" role="button">Delete Event</a>

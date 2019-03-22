@@ -245,6 +245,8 @@ def edit_profile(request):
 
 
 # These views need to order the events by date
+
+# Returns the events that the user has booked
 @user_passes_test(lambda u: u.is_user, login_url='index')
 def booked(request):
     booked_events = Booking.objects.filter(user=request.user)
@@ -256,6 +258,7 @@ def booked(request):
         counter+=1
     return render(request, 'eventsoc/booked.html',{'books':temp})
 
+# Returns the events that the user has bookmarked
 @user_passes_test(lambda u: u.is_user, login_url='index')
 def bookmarked(request):
     bookmarked_events = Bookmark.objects.filter(user=request.user)
@@ -301,14 +304,13 @@ def user_logout(request):
     return HttpResponseRedirect(reverse('index'))
 
 
-# Both booking and bookmark functions should be called by ajax/jQuery somehow
 
 # Increments event.booked and creates a booking for each user
 @login_required
 def booking(request, slug):
     if request.method == 'GET':
         event = get_object_or_404(Event, slug=slug)
-        event.booked =  F('booked') + 1
+        event.bookings =  F('bookings') + 1
         event.save()
         booking = Booking(user=request.user, event=event, booked=True)
         booking.save()
@@ -323,7 +325,7 @@ def booking(request, slug):
 def cancel_booking(request, slug):
     if request.method == 'GET':
         event = get_object_or_404(Event, slug=slug)
-        event.booked =  F('booked') - 1
+        event.bookings =  F('bookings') - 1
         event.save()
         booking = Booking.objects.get(user=request.user, event=event, booked=True)
         booking.delete()
