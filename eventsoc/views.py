@@ -50,16 +50,20 @@ def user_login(request):
 
 
 def show_event(request, slug):
-    user = UserProfile.objects.get(id=request.user.id)
-    event = Event.objects.get(slug=slug)
-    booked = Booking.objects.filter(user=user, event=event).exists()
-    bookmarked = Bookmark.objects.filter(user=user, event=event).exists()
-    creator = False
-    if event.creator == user:
-        creator = True
-    return render(request, 'eventsoc/event.html',
-                  {'slug': slug, 'event': event, 'creator': creator, 'booked': booked, 'bookmarked': bookmarked})
-
+    if request.user.is_authenticated:
+        user = UserProfile.objects.get(id=request.user.id)
+        event = Event.objects.get(slug=slug)
+        booked = Booking.objects.filter(user=user, event=event).exists()
+        bookmarked = Bookmark.objects.filter(user=user, event=event).exists()
+        creator = False
+        if event.creator == user:
+            creator = True
+        return render(request, 'eventsoc/event.html',
+                      {'slug': slug, 'event': event, 'creator': creator, 'booked': booked, 'bookmarked': bookmarked})
+    else:
+        event = Event.objects.get(slug=slug)
+        return render(request, 'eventsoc/event.html',
+                      {'slug': slug, 'event': event})
 
 @user_passes_test(lambda u: u.is_society, login_url='index')
 def create_event(request):
