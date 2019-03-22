@@ -242,14 +242,20 @@ def booked(request):
         booking = booked_events.values('event_id')[counter]
         temp.append(Event.objects.get(id=booking['event_id']))
         counter+=1
-    print(temp)
     return render(request, 'eventsoc/booked.html',{'books':temp})
 
 @user_passes_test(lambda u: u.is_user, login_url='index')
 def bookmarked(request):
     bookmarked_events = Bookmark.objects.filter(user=request.user)
-    return render(request, "eventsoc/booked.html",
-                  {'upcoming_events': bookmarked_events})
+    temp=[]
+    counter = 0
+    for i in bookmarked_events:
+        booking = bookmarked_events.values('event_id')[counter]
+        temp.append(Event.objects.get(id=booking['event_id']))
+        counter+=1
+    print(temp)
+    return render(request, "eventsoc/bookmarked.html",
+                  {'upcoming_events': temp})
 
 
 @login_required
@@ -312,13 +318,16 @@ def cancel_booking(request, slug):
     return redirect('eventsoc/event/slug.html')
 
 @login_required
-def bookmark(request):
-    if request.method == 'POST':
-        event_id = request.GET['event_id']
-        event = get_object_or_404(Event, id=event_id)
-        bookmark = Bookmark(user=request.user, event=event, booked=True)
+def bookmark(request, slug):
+    if request.method == 'GET':
+        event = get_object_or_404(Event, slug=slug)
+        bookmark = Bookmark(user=request.user, event=event, bookmarked=True)
         bookmark.save()
-    return redirect('eventsoc')
+        messages.add_message(
+            request,
+            messages.SUCCESS,
+            "Successfully bookmarked!")
+    return redirect('../')
 
 @login_required
 def remove_bookmark(request):

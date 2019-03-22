@@ -38,4 +38,5 @@ urlpatterns = [
     path('event/<slug:slug>/delete/', views.delete_event, name='delete_event'),
     path('event/<slug:slug>/', views.show_event, name='event'),
     path('event/<slug:slug>/booking/', views.booking, name='booking'),
+    path('event/<slug:slug>/bookmark/', views.bookmark, name='bookmark'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
