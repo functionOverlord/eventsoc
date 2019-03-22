@@ -53,29 +53,24 @@
                 <!-- Needs JavaScript to decide on which buttons to show, won't show both cancel and remove at same time -->
                 {% if user.is_user %}
                   {% if booked %}
-                  <form action="bookmark" method="get">
-                    <input class="btn btn-primary btn-lg" type="submit" value="Bookmark">
-                  </form>
-                  <br/>
                     <form action="cancel_booking" method="get">
                       <input class="btn btn-danger btn-lg" type="submit" value="Cancel booking">
                     </form>
-                  {% elif bookmarked %}
-                  <form action="remove_bookmark" method="get">
-                    <input class="btn btn-danger btn-lg" type="submit" value="Cancel bookmark">
-                  </form>
-                  <br/>
-                    <form action="booking" method="get">
-                      <input class="btn btn-primary btn-lg" type="submit" value="Book a place">
-                    </form>
                   {% else %}
-                  <form action="bookmark" method="get">
-                    <input class="btn btn-primary btn-lg" type="submit" value="Bookmark">
-                  </form>
-                  <br/>
                     <form action="booking" method="get">
                       <input class="btn btn-primary btn-lg" type="submit" value="Book a place">
                     </form>
+                  {% endif %}
+                  {% if bookmarked %}
+                    <form action="remove_bookmark" method="get">
+                      <input class="btn btn-danger btn-lg" type="submit" value="Cancel bookmark">
+                    </form>
+                    <br/>
+                  {% else %}
+                    <form action="bookmark" method="get">
+                      <input class="btn btn-primary btn-lg" type="submit" value="Bookmark">
+                    </form>
+                    <br/>
                   {% endif %}
                 {% elif user.is_society %}
                   {% if creator %}
