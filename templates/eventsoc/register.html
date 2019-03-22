@@ -9,8 +9,8 @@
 
     <link rel="stylesheet" href="{% static "css/login_pages.css" %}"/>
 
-    {% if registered %} {% comment %}TODO remove this{% endcomment %}
-        Thank you for registering!
+    {% if registered %}
+        Error has occurred, please return to the homepage
         <a href="{% url 'index' %}">Return to homepage</a>
     {% else %}
 

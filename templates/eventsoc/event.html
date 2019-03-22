@@ -7,6 +7,7 @@
 
 
 {% block body_block %}
+<link rel="stylesheet" href="{% static 'css/event_pages.css' %}"/>
 {% if messages %}
   <ul class="list-group">
       {% for message in messages %}
@@ -61,7 +62,7 @@
                       <input class="btn btn-primary btn-lg" type="submit" value="Book a place">
                     </form>
                   {% endif %}
-                  <br/>                  
+                  <br/>
                   {% if bookmarked %}
                     <form action="remove_bookmark" method="get">
                       <input class="btn btn-danger btn-lg" type="submit" value="Cancel bookmark">
@@ -76,7 +77,13 @@
                 {% elif user.is_society %}
                   {% if creator %}
                     <a class="btn btn-primary" href="{% url 'edit_event' event.slug %}" role="button">Edit Event</a>
-                    <a class="btn btn-primary" href="{{ event.name }}delete" role="button">Delete Event</a>
+                    <button class="btn btn-primary btn-delete" type="button">Delete Event</button>
+                    <div>
+                      <br />
+                      <a id="btn-confirm" class="btn btn-danger" href="{{ event.name }}delete" role="button">Confirm Delete Event</a>
+                      <a id="btn-cancel-delete" class="btn btn-danger" role="button">Cancel</a>
+                    </div>
+                  </div>
                   {% endif %}
                 {% endif %}
             </div>
