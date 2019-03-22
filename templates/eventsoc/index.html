@@ -1,4 +1,4 @@
-{%  extends 'eventsoc/base.html' %}
+{% extends 'eventsoc/base.html' %}
 {% load staticfiles %}
 
 {% block title_block %}
@@ -6,39 +6,48 @@
 {% endblock %}
 
 {% block body_block %}
-<!-- TODO IMAGES SHOULD BE OF THE SAME SIZE-->
-<div id="carousel_slides" class="carousel slide" data-ride="carousel" data-pause="hover">
-    <ol class="carousel-indicators">
-        {% for event in trending_events %}
-        <li data-target="#carousel_slides" data-slide-to="{{ forloop.counter }}" {% if forloop.first %}class="active"{% endif %} }}></li>
-        {% endfor %}
-    </ol>
-    <div class="carousel-inner">
-        {% for event in trending_events %}
-            <div class="carousel-item {% if forloop.first %}active{% endif %}">
-            {% comment %} TODO alt? {% endcomment %}
-            <img src="{{MEDIA_URL}}{{ event.picture }}" class="d-block w-100" alt="event1">
-            <div class="carousel-caption d-none d-md-block">
-                {{ event.title }}
-                <!-- TODO REPLACE WITH EVENT HREF -->
-                <button type="button" class="btn btn-primary btn-lg" onclick="location.href='events/{{ event.pk }}'">Go to event</button>
-            </div>
+    {% if messages %}
+        <ul class="list-group">
+            {% for message in messages %}
+                <li class="list-group-item list-group-item-success" {% if message.tags %}
+                    class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    <br/>
+    <div id="carousel_slides" class="carousel slide" data-ride="carousel" data-pause="hover">
+        <ol class="carousel-indicators">
+            {% for event in trending_events %}
+                <li data-target="#carousel_slides" data-slide-to="{{ forloop.counter }}"
+                    {% if forloop.first %}class="active"{% endif %}></li>
+            {% endfor %}
+        </ol>
+        <div class="carousel-inner">
+            {% for event in trending_events %}
+                <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                    <img src="{{ MEDIA_URL }}{{ event.picture }}" class="d-block w-100" alt="trending_event">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h1 class="display-4">{{ event.title }}</h1>
+                        <button type="button" class="btn btn-primary btn-lg"
+                                onclick="location.href='{% url 'event' event.slug %}'">Go to event
+                        </button>
+                    </div>
+                </div>
+            {% endfor %}
         </div>
-        {% endfor %}
+
+        <a class="carousel-control-prev" href="#carousel_slides" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#carousel_slides" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+        </a>
     </div>
 
-    <a class="carousel-control-prev" href="#carousel_slides" role="button" data-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="sr-only">Previous</span>
-    </a>
-    <a class="carousel-control-next" href="#carousel_slides" role="button" data-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="sr-only">Next</span>
-    </a>
-</div>
+    <hr class="my-4">
 
-<hr class="my-4">
-
-{% include 'eventsoc/_event_cards.html' %}
+    {% include 'eventsoc/_event_cards.html' %}
 
 {% endblock %}

@@ -36,7 +36,7 @@
         <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
 
             <div class="container-fluid">
-                <a class="navbar-brand" href="/"><img src="{% static 'images/logo.png' %}"></a>
+                <a class="navbar-brand" href="{% url 'index' %}"><img src="{% static 'images/logo.png' %}"></a>
 
                 <!-- button to unhide the navbar if it gets resized to vertical because of screen size -->
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive">
@@ -45,24 +45,32 @@
 
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                   {% if user.is_authenticated %}
-                  <ul class="navbar-nav">
-                      <li class="nav-link"><a class="nav-link" href="/booked">Booked Events</a></li>
-                      <li class="nav-link"><a class="nav-link" href="#">Bookmarked events</a></li>
-                  </ul>
+                    {% if user.is_user %}
+                    <ul class="navbar-nav">
+                        <li class="nav-link"><a class="nav-link" href="{% url 'booked' %}">Booked Events</a></li>
+                        <li class="nav-link"><a class="nav-link" href="{% url 'bookmarked' %}">Bookmarked events</a></li>
+                    </ul>
+                    {% else %}
+                    <ul class="navbar-nav">
+                        <li class="nav-link"><a class="nav-link" href="{% url 'create_event' %}">Create Event</a></li>
+                    </ul>
+                    {% endif %}
                   {% endif %}
-                  {#                TODO DOUBLE CHECK THE USE OF HREF -> USE {% URL 'PAGE-NAME' %} INSTEAD?#}
+
                   {% if user.is_authenticated %}
                   <ul class="navbar-nav ml-auto">
                       <form class="form-inline">
-                          <button class="btn btn-outline-success" type="button" onclick="location.href='/account'">Account</button>
-                          <button class="btn btn-outline-success" type="button" onclick="location.href='/user_logout'">Logout</button>
+                          <button class="btn btn-outline-success" id="about-btn">Contact Us</button>
+                          <button class="btn btn-outline-success" type="button" onclick="location.href='{% url 'account' %}'">Account</button>
+                          <button class="btn btn-outline-success" type="button" onclick="location.href='{% url 'user_logout' %}'">Logout</button>
                       </form>
                   </ul>
                   {% else %}
                   <ul class="navbar-nav ml-auto">
-                      <form class="form-inline">
-                          <button class="btn btn-outline-success" type="button" onclick="location.href='/login'">Login</button>
-                          <button class="btn btn-outline-success" type="button" onclick="location.href='/register'">Register</button>
+                        <form class="form-inline">
+                          <button class="btn btn-outline-success" id="about-btn">Contact Us</button>
+                          <button class="btn btn-outline-success" type="button" onclick="location.href='{% url 'login' %}'">Login</button>
+                          <button class="btn btn-outline-success" type="button" onclick="location.href='{% url 'register' %}'">Register</button>
                       </form>
                   </ul>
                   {% endif %}
@@ -76,23 +84,13 @@
             {% endblock %}
         </div>
 
-        <!-- only a demo of scrolling in action, remove later -->
-        <div>
-            <br/>
-            some content for
-            <br/><br/><br/><br/><br/>
-            <br/><br/><br/><br/><br/>
-            <br/><br/><br/><br/><br/>
-            <br/><br/><br/><br/><br/>
-            <br/><br/><br/><br/><br/>
-            scrolling
-        </div>
-
 
         <!-- Optional JavaScript -->
 
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="{% static "js/eventsoc_js.js" %}"></script>
+        <script src="{% static "js/confirm_delete.js" %}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     </body>
