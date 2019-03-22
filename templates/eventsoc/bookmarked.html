@@ -1,4 +1,4 @@
-{%  extends 'eventsoc/base.html' %}
+{% extends 'eventsoc/base.html' %}
 {% load staticfiles %}
 
 {% block title_block %}
@@ -7,19 +7,27 @@
 
 <!-- Should hopefully display bookmarked events the same as a society's events in the account page -->
 {% block body_block %}
-  <h2>Upcoming Events</h2>
+    <h2>Upcoming Events</h2>
     <div class="container-fluid">
         <div class="row">
             {% for event in upcoming_events %}
                 <div class="card-deck col-md-4 col-sm-6 col-xs-1">
                     <div class="card">
-                            <img class="card-img-top" src="{{ MEDIA_URL }}{{ event.picture }}" alt="..." onclick="location.href='{% url 'event' event.slug %}'">
+                        <img class="card-img-top" src="{{ MEDIA_URL }}{{ event.picture }}" alt="..."
+                             onclick="location.href='{% url 'event' event.slug %}'">
                         <div class="card-body">
-                            <p class="card-text"><small class="text-muted">{{ event.date }}</small></p>
-                            <h3 class="card-title" onclick="location.href='{% url 'event' event.slug %}'">{{ event.title }}</h3>
+                            <p class="card-text">
+                                <small class="text-muted">{{ event.date }}</small>
+                            </p>
+                            <h3 class="card-title"
+                                onclick="location.href='{% url 'event' event.slug %}'">{{ event.title }}</h3>
                             <p class="card-text">{{ event.place_name }}</p>
-                            <p class="card-text"><small class="text-muted">{{ event.address }}</small></p>
-                            <p class="card-text"><small class="text-muted">Price: {{ event.price }}</small></p>
+                            <p class="card-text">
+                                <small class="text-muted">{{ event.address }}</small>
+                            </p>
+                            <p class="card-text">
+                                <small class="text-muted">Price: {{ event.price }}</small>
+                            </p>
                             <div class="label-container">
                                 <div class="label-text">Bookmark</div>
                                 <i class="fa fa-play label-arrow"></i>
@@ -30,6 +38,6 @@
             {% endfor %}
         </div>
     </div>
-</div>
+    </div>
     <br/>
 {% endblock %}

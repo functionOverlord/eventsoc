@@ -6,13 +6,14 @@
 {% endblock %}
 
 {% block body_block %}
-  {% if messages %}
-    <ul class="list-group">
-        {% for message in messages %}
-          <li class="list-group-item list-group-item-success" {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-        {% endfor %}
-    </ul>
-  {% endif %}
+    {% if messages %}
+        <ul class="list-group">
+            {% for message in messages %}
+                <li class="list-group-item list-group-item-success" {% if message.tags %}
+                    class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
     <br/>
     <div id="carousel_slides" class="carousel slide" data-ride="carousel" data-pause="hover">
         <ol class="carousel-indicators">

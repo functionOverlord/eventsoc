@@ -12,7 +12,7 @@ from django.db.models import F
 
 
 def index(request):
-    trending_events = Event.objects.order_by('-popularity')[:5]  # TODO correct sorting order?
+    trending_events = Event.objects.order_by('-popularity')[:5]
     upcoming_events = Event.objects.order_by('date')
     return render(request,
                   "eventsoc/index.html",
@@ -189,7 +189,7 @@ def show_category(request, category_name_slug):
 
         # Retrieve popular events in the category
         trending_events = Event.objects.filter(category=category).order_by(
-            '-popularity')[:5]  # TODO correct sorting order?
+            '-popularity')[:5]
 
         context_dict['trending_events'] = trending_events
         context_dict['upcoming_events'] = upcoming_events

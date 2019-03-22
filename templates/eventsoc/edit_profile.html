@@ -1,4 +1,4 @@
-{%  extends 'eventsoc/base.html' %}
+{% extends 'eventsoc/base.html' %}
 {% load staticfiles %}
 
 {% block title_block %}
@@ -6,17 +6,18 @@
 {% endblock %}
 
 {% block body_block %}
-{% if messages %}
-  <ul class="list-group">
-      {% for message in messages %}
-        <li class="list-group-item list-group-item-success" {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-      {% endfor %}
-  </ul>
-{% endif %}
-<h2>Edit Profile</h2>
-<form id="form" method="post" action="{% url 'edit_profile' %}" enctype="multipart/form-data">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <input type="submit" class="btn btn-primary" name="edit_profile" value="Edit Profile"/>
-</form>
+    {% if messages %}
+        <ul class="list-group">
+            {% for message in messages %}
+                <li class="list-group-item list-group-item-success" {% if message.tags %}
+                    class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    <h2>Edit Profile</h2>
+    <form id="form" method="post" action="{% url 'edit_profile' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" class="btn btn-primary" name="edit_profile" value="Edit Profile"/>
+    </form>
 {% endblock %}

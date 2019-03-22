@@ -1,4 +1,4 @@
-{%  extends 'eventsoc/base.html' %}
+{% extends 'eventsoc/base.html' %}
 {% load staticfiles %}
 
 {% block title_block %}
@@ -6,21 +6,22 @@
 {% endblock %}
 
 {% block body_block %}
-{% if messages %}
-  <ul class="list-group">
-      {% for message in messages %}
-        <li class="list-group-item list-group-item-info" {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-      {% endfor %}
-  </ul>
-{% endif %}
-<h2>Edit Event</h2>
-{% if event %}
-  <form id="event_form" method="post" action="{% url 'edit_event' event.slug %}" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ event_form.as_p }}
-    <input type="submit" class="btn btn-primary" name="edit_event" value="Save Changes"/>
-  </form>
-{% else %}
-  The event doesn't exist
-{% endif %}
+    {% if messages %}
+        <ul class="list-group">
+            {% for message in messages %}
+                <li class="list-group-item list-group-item-info" {% if message.tags %}
+                    class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    <h2>Edit Event</h2>
+    {% if event %}
+        <form id="event_form" method="post" action="{% url 'edit_event' event.slug %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ event_form.as_p }}
+            <input type="submit" class="btn btn-primary" name="edit_event" value="Save Changes"/>
+        </form>
+    {% else %}
+        The event doesn't exist
+    {% endif %}
 {% endblock %}

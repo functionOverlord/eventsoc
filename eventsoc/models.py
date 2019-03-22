@@ -72,7 +72,7 @@ class Event(models.Model):
         return self.remaining_capacity() < 1
 
     def is_past(self):
-        return timezone.now() > self.date  # TODO test it's the right import
+        return timezone.now() > self.date
 
 
 class Booking(models.Model):
