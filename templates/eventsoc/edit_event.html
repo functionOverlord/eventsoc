@@ -9,7 +9,7 @@
 {% if messages %}
   <ul class="list-group">
       {% for message in messages %}
-        <li class="list-group-item list-group-item-success" {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        <li class="list-group-item list-group-item-info" {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
       {% endfor %}
   </ul>
 {% endif %}

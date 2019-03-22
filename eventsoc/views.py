@@ -124,18 +124,24 @@ def edit_event(request, slug):
     event = Event.objects.get(slug=slug)
     event_form = EventForm(instance=event)
     if request.user.is_authenticated:
-        if request.method == 'POST':
-            event_form = EventForm(request.POST, request.FILES, instance=event)
-            if event_form.is_valid:
-                update = event_form.save()
-                update.society = society
-                messages.add_message(
-                    request,
-                    messages.SUCCESS,
-                    "Successfully saved!")
-                update.save()
+        if event.creator == request.user:
+            if request.method == 'POST':
+                event_form = EventForm(request.POST, request.FILES, instance=event)
+                if event_form.is_valid:
+                    update = event_form.save()
+                    update.society = society
+                    messages.add_message(
+                        request,
+                        messages.SUCCESS,
+                        "Successfully saved!")
+                    update.save()
+            else:
+                events = []
         else:
-            events = []
+            messages.add_message(
+                request,
+                messages.ERROR,
+                "Cannot edit this event as it does not belong to you!")
     else:
         events = []
     return render(request, 'eventsoc/edit_event.html',
@@ -146,11 +152,11 @@ def edit_event(request, slug):
 def delete_event(request, slug):
     event = get_object_or_404(Event, slug=slug)
     creator = request.user
+    errormsg=''
     if request.method == 'GET':
         if event.creator == creator:
             event.delete()
             return redirect('/')
-
     return render(request, 'eventsoc/delete_event.html', {"event": event})
 
 
