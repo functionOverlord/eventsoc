@@ -13,7 +13,7 @@
                         <p class="card-text"><small class="text-muted">{{ event.address }}</small></p>
                         <p class="card-text"><small class="text-muted">Price: £{{ event.price }}</small></p>
                         {% if user.is_user %}
-                            <a href="#" class="float">
+                            <a href="/event/{{ event.slug }}/bookmark" class="float">
                                 <i class="fa fa-heart my-float"></i>
                             </a>
                             <div class="label-container">
