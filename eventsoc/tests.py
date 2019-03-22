@@ -4,6 +4,7 @@ from eventsoc.forms import SocietyForm, StudentForm, EditSocietyForm, EditStuden
 from django.template.defaultfilters import slugify
 from django.urls import reverse
 from eventsoc.form_functions import check_email, check_password
+from django.contrib.staticfiles import finders
 
 # class TestUserProfile(TestCase):
 #     def create_user(self, is_user=True, username="TestUser", password1="testpassword12", password2="testpassword12", email="test@test.com")
@@ -15,6 +16,19 @@ from eventsoc.form_functions import check_email, check_password
 #         self.assertEqual(u.__unicode__(), u.username)
 #         self.assertEqual(u.__unicode__(), u.password1)
 #         self.assertEqual(u.__unicode)
+
+
+class GeneralTests(TestCase):
+    # Check if files exist in static media folder
+    # Returns None if file is not found
+    def test_static_files(self):
+        static_media = finders.find('images/logo.png')
+        self.assertIsNotNone(static_media)
+
+    # Check if user successfully gets to the index page
+    def test_urls(self):
+        response = self.client.get(reverse('index'))
+        self.assertEqual(response.status_code, 200)
 
 class TestModels(TestCase):
     def create_society(self, is_user=True, username="TestUser", password="testpassword12", email="test@test.com", ):

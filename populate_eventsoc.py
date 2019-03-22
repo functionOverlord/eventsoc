@@ -46,6 +46,10 @@ def populate():
                 "social_media_website": "https://www.facebook.com/guts/"}
     }
 
+    # Dictionary with details for the admin user
+    admin_user = {"username":"admin", 
+                "password": "admin", "email":"admin@gmail.com"}
+
 
     # The code below goes through the societies dictionary and add's
     # an account for society in the database
@@ -56,6 +60,8 @@ def populate():
                 societies[soc]["email"],
                 societies[soc]["password"], 
                 societies[soc]["social_media_website"])
+
+    a = add_admin(admin_user["username"], admin_user["password"], admin_user["email"])
 
 
     # Create lists of dictionaries containing the events we want
@@ -196,9 +202,6 @@ def populate():
             "Talks and Discussions": {"events": talks_discussions_events}}
 
 
-
-
-
     # The code below goes through the cats dictionary, then adds each
     # category and then adds all the associated events for that category
     for cat, cat_data in cats.items():
@@ -215,6 +218,7 @@ def populate():
                 p["capacity"],
                 p["picture"],
                 p["creator"])
+                
     # Print out the categories we have added.
     for c in Category.objects.all():
         for p in Event.objects.filter(category=c):
@@ -226,6 +230,14 @@ def add_society(username, society_name, email, password, social_media_website):
     society_name=society_name, social_media_website=social_media_website, is_society=True)[0]
     s.save()
     return s
+
+
+def add_admin(username, password, email):
+    admin = UserProfile.objects.create_user(username=username, password=password, email=email)
+    admin.is_superuser=True
+    admin.is_staff=True
+    admin.save()
+    return admin
 
 
 def add_event(
