@@ -13,4 +13,9 @@ $(function () {
     $("#about-btn").click( function(event) {
         alert("Email us at eventsoc@gu.gla.ac.uk");
         });
+
+    $(".register-back").click(function () {
+        $(".register-form").hide();
+        $(".register-buttons").css("display", "inline");
+    })
 });

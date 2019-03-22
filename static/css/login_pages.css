@@ -3,6 +3,12 @@
     display: none;
 }
 
+.register-back {
+    text-align: left;
+    padding-left: 20%;
+    font-size: 250%;
+}
+
 form > ul {
     display: none;
 }
