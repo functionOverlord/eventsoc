@@ -15,16 +15,16 @@
     {% else %}
 
         <div class="container">
-          <h1 id="header">Select user type to register</h1>
-          <br/>
-            <div class="row register-buttons">
+            <div class="row register-buttons" align="center">
                 <div class="col">
+                    <h1>Select user type to register</h1>
+                    <br/>
                     <button class="btn btn-success btn-register-user" type="button">Register as a User</button>
                     <button class="btn btn-success btn-register-society" type="button">Register as a Society</button>
                 </div>
             </div>
 
-            <div class="row register-form" id="user-form">
+            <div class="row register-form" id="user-form" align="center">
                 <div class="col">
                     <form method="post" id="user-form" action="{% url 'register' %}" enctype="multipart/form-data">
                         <h2>User Registration</h2>
@@ -35,7 +35,7 @@
                 </div>
             </div>
 
-            <div class="row register-form" id="society-form">
+            <div class="row register-form" id="society-form" align="center">
                 <div class="col">
                     <form method="post" id="society-form" action="{% url 'register' %}" enctype="multipart/form-data">
                         <h2>Society Registration</h2>
